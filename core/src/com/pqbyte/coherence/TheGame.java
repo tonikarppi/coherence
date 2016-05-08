@@ -54,8 +54,8 @@ public class TheGame extends ApplicationAdapter {
   @Override
   public void render() {
     handleInput(1);
-    camera.position.x = player.getX();
-    camera.position.y = player.getY();
+    camera.position.x = player.getX() + player.getWidth() / 2f;
+    camera.position.y = player.getY() + player.getHeight() / 2f;
     camera.update();
 
     Gdx.gl.glClearColor(1, 0, 0, 1);
