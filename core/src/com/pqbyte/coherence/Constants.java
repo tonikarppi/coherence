@@ -1,6 +1,11 @@
 package com.pqbyte.coherence;
 
 public final class Constants {
+  private static final boolean DEBUG = true;
+  public static boolean isDebug() {
+    return DEBUG;
+  }
+
   public static final int WORLD_WIDTH = 160;
   public static final int WORLD_HEIGHT = 90;
 

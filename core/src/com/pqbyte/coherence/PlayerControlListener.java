@@ -5,10 +5,10 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 
 import static com.badlogic.gdx.Input.Keys.*;
 
-public class MoveListener extends InputListener {
+public class PlayerControlListener extends InputListener {
   private Player player;
 
-  public MoveListener(Player player) {
+  public PlayerControlListener(Player player) {
     this.player = player;
   }
 
