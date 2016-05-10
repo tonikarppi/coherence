@@ -138,9 +138,9 @@ public class Player extends Actor {
 
     FixtureDef fixtureDef = new FixtureDef();
     fixtureDef.shape = shape;
-    fixtureDef.density = 1;
-    fixtureDef.filter.categoryBits = Constants.PHYSICS_ENTITY;
-    fixtureDef.filter.maskBits = Constants.WORLD_ENTITY;
+    fixtureDef.density = 100;
+    fixtureDef.filter.categoryBits = PHYSICS_ENTITY;
+    fixtureDef.filter.maskBits = WORLD_ENTITY;
 
     body.createFixture(fixtureDef);
     shape.dispose();
