@@ -33,11 +33,15 @@ public class Player extends Actor {
 
   private Sprite sprite;
   private Body body;
+  private World world;
+  private Array<Projectile> projectiles;
 
   public Player(Texture texture, float startX, float startY, World world) {
+    this.world = world;
     sprite = new Sprite(texture);
     setBounds(startX, startY, PLAYER_SIZE, PLAYER_SIZE);
     body = createPlayerBody(world);
+    projectiles = new Array<Projectile>();
   }
 
   @Override
@@ -70,11 +74,20 @@ public class Player extends Actor {
         getY() + getHeight() / 2f,
         0
     );
+
+    Stage stage = getStage();
+    Iterator<Projectile> projectileIterator = projectiles.iterator();
+    while (projectileIterator.hasNext()) {
+        stage.addActor(projectileIterator.next());
+        projectileIterator.remove();
+    }
   }
 
   @Override
   public void draw(Batch batch, float parentAlpha) {
-    batch.draw(sprite, getX(), getY(), getWidth(), getHeight());
+    if (!Constants.isDebug()) {
+      batch.draw(sprite, getX(), getY(), getWidth(), getHeight());
+    }
   }
 
   public void setGoingLeft(boolean going) {
@@ -91,6 +104,16 @@ public class Player extends Actor {
 
   public void setGoingDown(boolean going) {
     goingDown = going;
+  }
+
+  public void shoot(float x, float y) {
+    projectiles.add(new Projectile(
+        getX() + getWidth() / 2,
+        getY() + getHeight() / 2,
+        x,
+        y,
+        world
+    ));
   }
 
   /**
