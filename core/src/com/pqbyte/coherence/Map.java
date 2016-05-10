@@ -1,5 +1,7 @@
 package com.pqbyte.coherence;
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -26,7 +28,9 @@ public class Map extends Actor {
 
   @Override
   public void draw(Batch batch, float parentAlpha) {
-    batch.draw(texture, getX(), getY(), getWidth(), getHeight());
+    if (!Constants.isDebug()) {
+      batch.draw(texture, getX(), getY(), getWidth(), getHeight());
+    }
   }
 
   /**
@@ -55,6 +59,8 @@ public class Map extends Actor {
 
     Body wall = world.createBody(def);
     wall.createFixture(properties);
+    wall.setUserData(this);
+
     shape.dispose();
   }
 }

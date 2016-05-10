@@ -1,5 +1,7 @@
 package com.pqbyte.coherence;
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -10,12 +12,18 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
+
+import java.util.Iterator;
+
+import static com.pqbyte.coherence.Constants.*;
 
 /**
  * The player being controlled.
  */
 public class Player extends Actor {
-  private static final int PLAYER_SIZE = 2;
+  private static final int PLAYER_SIZE = 1;
   private static final float STEP_SIZE = 20;
 
   private boolean goingLeft = false;
@@ -25,11 +33,15 @@ public class Player extends Actor {
 
   private Sprite sprite;
   private Body body;
+  private World world;
+  private Array<Projectile> projectiles;
 
   public Player(Texture texture, float startX, float startY, World world) {
+    this.world = world;
     sprite = new Sprite(texture);
     setBounds(startX, startY, PLAYER_SIZE, PLAYER_SIZE);
     body = createPlayerBody(world);
+    projectiles = new Array<Projectile>();
   }
 
   @Override
@@ -62,11 +74,20 @@ public class Player extends Actor {
         getY() + getHeight() / 2f,
         0
     );
+
+    Stage stage = getStage();
+    Iterator<Projectile> projectileIterator = projectiles.iterator();
+    while (projectileIterator.hasNext()) {
+        stage.addActor(projectileIterator.next());
+        projectileIterator.remove();
+    }
   }
 
   @Override
   public void draw(Batch batch, float parentAlpha) {
-    batch.draw(sprite, getX(), getY(), getWidth(), getHeight());
+    if (!Constants.isDebug()) {
+      batch.draw(sprite, getX(), getY(), getWidth(), getHeight());
+    }
   }
 
   public void setGoingLeft(boolean going) {
@@ -83,6 +104,16 @@ public class Player extends Actor {
 
   public void setGoingDown(boolean going) {
     goingDown = going;
+  }
+
+  public void shoot(float x, float y) {
+    projectiles.add(new Projectile(
+        getX() + getWidth() / 2,
+        getY() + getHeight() / 2,
+        x,
+        y,
+        world
+    ));
   }
 
   /**
@@ -107,11 +138,13 @@ public class Player extends Actor {
 
     FixtureDef fixtureDef = new FixtureDef();
     fixtureDef.shape = shape;
-    fixtureDef.density = 1;
-    fixtureDef.filter.categoryBits = Constants.PHYSICS_ENTITY;
-    fixtureDef.filter.maskBits = Constants.WORLD_ENTITY;
+    fixtureDef.density = 100;
+    fixtureDef.filter.categoryBits = PHYSICS_ENTITY;
+    fixtureDef.filter.maskBits = WORLD_ENTITY;
 
     body.createFixture(fixtureDef);
+    body.setUserData(this);
+
     shape.dispose();
 
     return body;
