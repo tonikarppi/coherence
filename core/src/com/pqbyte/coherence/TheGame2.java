@@ -38,7 +38,7 @@ public class TheGame2 extends ApplicationAdapter {
     Player player = new Player(
         new Texture(Gdx.files.internal("cube128.png")),
         0,
-        0,
+        Constants.WORLD_HEIGHT - 10,
         world
     );
     player.addListener(new PlayerControlListener(player));
