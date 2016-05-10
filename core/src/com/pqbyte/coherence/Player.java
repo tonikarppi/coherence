@@ -143,6 +143,8 @@ public class Player extends Actor {
     fixtureDef.filter.maskBits = WORLD_ENTITY;
 
     body.createFixture(fixtureDef);
+    body.setUserData(this);
+
     shape.dispose();
 
     return body;
