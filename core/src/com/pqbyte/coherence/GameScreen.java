@@ -22,17 +22,13 @@ public class GameScreen extends ScreenAdapter {
   private Box2DDebugRenderer debugRenderer;
   private Array<Projectile> bulletToBeRemoved;
 
+  /**
+   * The screen where the game is played.
+   */
   public GameScreen() {
     world = new World(new Vector2(0, 0), true);
     bulletToBeRemoved = new Array<Projectile>();
     world.setContactListener(new CollisionListener(bulletToBeRemoved));
-
-    Map map = new Map(
-        new Texture(Gdx.files.internal("wallpaper.jpg")),
-        Constants.WORLD_WIDTH,
-        Constants.WORLD_HEIGHT,
-        world
-    );
 
     Player player = new Player(
         new Texture(Gdx.files.internal("cube128.png")),
@@ -45,6 +41,13 @@ public class GameScreen extends ScreenAdapter {
 
     float screenWidth = Gdx.graphics.getWidth();
     float screenHeight = Gdx.graphics.getHeight();
+
+    Map map = new Map(
+        new Texture(Gdx.files.internal("wallpaper.jpg")),
+        Constants.WORLD_WIDTH,
+        Constants.WORLD_HEIGHT,
+        world
+    );
 
     stage = new Stage(new ExtendViewport(
         VIEWPORT_WIDTH, VIEWPORT_WIDTH * (screenHeight / screenWidth)));

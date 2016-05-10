@@ -1,9 +1,12 @@
 package com.pqbyte.coherence;
 
+import static com.badlogic.gdx.Input.Keys.DOWN;
+import static com.badlogic.gdx.Input.Keys.LEFT;
+import static com.badlogic.gdx.Input.Keys.RIGHT;
+import static com.badlogic.gdx.Input.Keys.UP;
+
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-
-import static com.badlogic.gdx.Input.Keys.*;
 
 public class PlayerControlListener extends InputListener {
   private Player player;
@@ -28,6 +31,7 @@ public class PlayerControlListener extends InputListener {
       case DOWN:
         player.setGoingDown(true);
         break;
+      default:
     }
 
     return false;
@@ -49,6 +53,7 @@ public class PlayerControlListener extends InputListener {
       case DOWN:
         player.setGoingDown(false);
         break;
+      default:
     }
 
     return false;

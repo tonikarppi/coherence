@@ -1,7 +1,8 @@
 package com.pqbyte.coherence;
 
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Gdx;
+import static com.pqbyte.coherence.Constants.PHYSICS_ENTITY;
+import static com.pqbyte.coherence.Constants.WORLD_ENTITY;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -16,8 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.Iterator;
-
-import static com.pqbyte.coherence.Constants.*;
 
 /**
  * The player being controlled.
@@ -36,6 +35,13 @@ public class Player extends Actor {
   private World world;
   private Array<Projectile> projectiles;
 
+  /**
+   * The player entity that is controlled.
+   * @param texture The player's texture.
+   * @param startX The starting x-position.
+   * @param startY The starting y-position.
+   * @param world The Box2D world.
+   */
   public Player(Texture texture, float startX, float startY, World world) {
     this.world = world;
     sprite = new Sprite(texture);
@@ -78,8 +84,8 @@ public class Player extends Actor {
     Stage stage = getStage();
     Iterator<Projectile> projectileIterator = projectiles.iterator();
     while (projectileIterator.hasNext()) {
-        stage.addActor(projectileIterator.next());
-        projectileIterator.remove();
+      stage.addActor(projectileIterator.next());
+      projectileIterator.remove();
     }
   }
 
@@ -106,12 +112,18 @@ public class Player extends Actor {
     goingDown = going;
   }
 
-  public void shoot(float x, float y) {
+  /**
+   * Shoots a projectile towards to coordinates.
+   *
+   * @param targetX The target x-coordinate.
+   * @param targetY The target y-coordinate.
+   */
+  public void shoot(float targetX, float targetY) {
     projectiles.add(new Projectile(
         getX() + getWidth() / 2,
         getY() + getHeight() / 2,
-        x,
-        y,
+        targetX,
+        targetY,
         world
     ));
   }
@@ -129,7 +141,6 @@ public class Player extends Actor {
         getX() + getWidth() / 2,
         getY() + getHeight() / 2
     );
-    Body body = world.createBody(bodyDef);
     PolygonShape shape = new PolygonShape();
     shape.setAsBox(
         getWidth() / 2,
@@ -142,6 +153,7 @@ public class Player extends Actor {
     fixtureDef.filter.categoryBits = PHYSICS_ENTITY;
     fixtureDef.filter.maskBits = WORLD_ENTITY;
 
+    Body body = world.createBody(bodyDef);
     body.createFixture(fixtureDef);
     body.setUserData(this);
 
