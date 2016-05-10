@@ -20,7 +20,6 @@ public class Coherence2 extends Game {
 
     @Override
     public void render() {
-
         super.render();
     }
 
