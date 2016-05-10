@@ -89,5 +89,15 @@ public class TheGame2 extends ApplicationAdapter {
     }
   }
 
+  /**
+   * Removes bullet actors from scene.
+   */
+  private void removeUsedBullets() {
+    Iterator<Projectile> bulletsIterator = bulletToBeRemoved.iterator();
+    while (bulletsIterator.hasNext()) {
+      Projectile bullet = bulletsIterator.next();
+      bullet.remove();
+      bulletsIterator.remove();
+    }
   }
 }
