@@ -54,22 +54,40 @@ public class TheGame2 extends ApplicationAdapter {
     stage.setKeyboardFocus(player);
 
     Gdx.input.setInputProcessor(stage);
+
+    if (Constants.isDebug()) {
+      debugRenderer = new Box2DDebugRenderer();
+    }
   }
 
   @Override
   public void dispose() {
     stage.dispose();
     world.dispose();
+    if (Constants.isDebug()) {
+      debugRenderer.dispose();
+    }
   }
 
   @Override
   public void render() {
-    Gdx.gl.glClearColor(1, 0, 0, 1);
+    Gdx.gl.glClearColor(0, 0, 0, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     removeUsedBullets();
     world.step(1f / 60f, 6, 2);
     stage.act(Gdx.graphics.getDeltaTime());
     stage.draw();
+
+    if (Constants.isDebug()) {
+      Matrix4 debugMatrix = stage
+          .getBatch()
+          .getProjectionMatrix()
+          .cpy();
+
+      debugRenderer.render(world, debugMatrix);
+    }
+  }
+
   }
 }
