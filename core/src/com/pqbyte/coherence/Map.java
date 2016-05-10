@@ -59,6 +59,8 @@ public class Map extends Actor {
 
     Body wall = world.createBody(def);
     wall.createFixture(properties);
+    wall.setUserData(this);
+
     shape.dispose();
   }
 }
