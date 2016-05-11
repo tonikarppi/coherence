@@ -22,7 +22,7 @@ import java.util.Iterator;
  * The player being controlled.
  */
 public class Player extends Actor {
-  private static final int PLAYER_SIZE = 1;
+  private static final int PLAYER_SIZE = 2;
   private static final float STEP_SIZE = 20;
 
   private boolean goingLeft = false;
