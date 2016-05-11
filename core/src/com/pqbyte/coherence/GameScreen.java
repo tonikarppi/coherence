@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import java.util.Iterator;
 
 public class GameScreen extends ScreenAdapter {
-  private static final float VIEWPORT_WIDTH = 30;
+  private static final float VIEWPORT_WIDTH = 80;
 
   private Stage stage;
   private World world;
@@ -32,8 +32,8 @@ public class GameScreen extends ScreenAdapter {
 
     Player player = new Player(
         new Texture(Gdx.files.internal("cube128.png")),
-        0,
-        Constants.WORLD_HEIGHT - 10,
+        20,
+        20,
         world
     );
 
@@ -53,6 +53,7 @@ public class GameScreen extends ScreenAdapter {
         VIEWPORT_WIDTH, VIEWPORT_WIDTH * (screenHeight / screenWidth)));
     stage.addListener(new ShootingListener(player));
     stage.addActor(map);
+    addObstacles();
     stage.addActor(player);
     stage.setKeyboardFocus(player);
 
@@ -102,5 +103,95 @@ public class GameScreen extends ScreenAdapter {
       bullet.remove();
       bulletsIterator.remove();
     }
+  }
+
+  private void addObstacles() {
+    Vector2 bottomLeftCorner = new Vector2(-Constants.WORLD_WIDTH / 2, -Constants.WORLD_HEIGHT / 2);
+    Vector2 bottomRightCorner = new Vector2(Constants.WORLD_WIDTH / 2, -Constants.WORLD_HEIGHT / 2);
+    Vector2 topLeftCorner = new Vector2(-Constants.WORLD_WIDTH / 2, Constants.WORLD_HEIGHT / 2);
+    Vector2 topRightCorner = new Vector2(Constants.WORLD_WIDTH / 2, Constants.WORLD_HEIGHT / 2);
+    Vector2 center = new Vector2(0, 0);
+    float shortLength = 20;
+    float longLength = 30;
+    float breath = 5;
+    float sideOffset = 20;
+
+    Gdx.app.log(getClass().getSimpleName(), bottomLeftCorner.x + ", " + bottomLeftCorner.y);
+
+    Obstacle obstacleLeftHorizontal = new Obstacle(
+        null,
+        bottomLeftCorner.x + sideOffset,
+        bottomLeftCorner.y + (shortLength - breath) / 2f + sideOffset,
+        shortLength,
+        breath,
+        0,
+        world);
+
+    Obstacle obstacleLeftVertical = new Obstacle(
+        null,
+        bottomLeftCorner.x + (shortLength - breath) / 2f + sideOffset,
+        bottomLeftCorner.y + sideOffset,
+        shortLength,
+        breath,
+        90,
+        world
+    );
+
+    Obstacle obstacleRightHorizontal = new Obstacle(
+        null,
+        topRightCorner.x - sideOffset,
+        topRightCorner.y - (shortLength - breath) / 2f - sideOffset,
+        shortLength,
+        breath,
+        0,
+        world);
+
+    Obstacle obstacleRightVertical = new Obstacle(
+        null,
+        topRightCorner.x - (shortLength - breath) / 2f - sideOffset,
+        topRightCorner.y - sideOffset,
+        shortLength,
+        breath,
+        90,
+        world
+    );
+
+    Obstacle obstacleCenterVertical = new Obstacle(
+        null,
+        center.x,
+        center.y,
+        longLength,
+        breath,
+        90,
+        world
+    );
+
+    Obstacle obstacleBottomRight = new Obstacle(
+        null,
+        bottomRightCorner.x - sideOffset,
+        bottomRightCorner.y + sideOffset,
+        longLength,
+        breath,
+        135,
+        world
+    );
+
+    Obstacle obstacleTopLeft = new Obstacle(
+        null,
+        topLeftCorner.x + sideOffset,
+        topLeftCorner.y - sideOffset,
+        longLength,
+        breath,
+        135,
+        world
+    );
+
+    stage.addActor(obstacleLeftHorizontal);
+    stage.addActor(obstacleLeftVertical);
+    stage.addActor(obstacleRightHorizontal);
+    stage.addActor(obstacleRightVertical);
+    stage.addActor(obstacleCenterVertical);
+    stage.addActor(obstacleBottomRight);
+    stage.addActor(obstacleTopLeft);
   }
 }
