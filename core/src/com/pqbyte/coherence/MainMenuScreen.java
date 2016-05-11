@@ -11,6 +11,11 @@ public class MainMenuScreen implements Screen {
   final Coherence game;
   OrthographicCamera camera;
 
+  /**
+   * The screen that is shown when the game is started.
+   *
+   * @param game The game instance.
+   */
   public MainMenuScreen(final Coherence game) {
     this.game = game;
 
@@ -22,13 +27,11 @@ public class MainMenuScreen implements Screen {
   public void render(float delta) {
     Gdx.gl.glClearColor(135 / 255f, 206 / 255f, 235 / 255f, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    camera.update();
 
     SpriteBatch batch = game.batch;
     BitmapFont font = game.font;
-
-    camera.update();
     batch.setProjectionMatrix(camera.combined);
-
     batch.begin();
     font.draw(batch, "Coherence", 100, 200);
     font.draw(batch, "Tap anywhere to begin!", 100, 50);
