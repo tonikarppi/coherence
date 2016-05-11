@@ -1,6 +1,7 @@
 package com.pqbyte.coherence;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -34,14 +35,18 @@ public class PauseMenuScreen implements Screen {
     batch.setProjectionMatrix(camera.combined);
 
     batch.begin();
-    font.draw(batch, "The game has been paused", 100, 200);
-    font.draw(batch, "Tap anywhere to begin!", 100, 50);
+    font.draw(batch, "The game has been paused", 300, 350);
+    font.draw(batch, "Tap anywhere to resume!", 300, 250);
+    font.draw(batch, "Press Enter to return to main menu", 250, 200);
     batch.end();
 
     if (Gdx.input.isTouched()) {
       //game.GameScreen.show();
      game.setScreen(new GameScreen());
       dispose();
+    }
+    if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+      game.setScreen(new MainMenuScreen(game));
     }
   }
 
