@@ -21,9 +21,11 @@ public class CollisionListener implements ContactListener {
     Actor actorA = (Actor) contact.getFixtureA().getBody().getUserData();
     Actor actorB = (Actor) contact.getFixtureB().getBody().getUserData();
 
-    if (actorA instanceof Projectile && actorB instanceof Map) {
+    if (actorA instanceof Projectile
+        && (actorB instanceof Map || actorB instanceof Obstacle)) {
       bulletsToBeRemoved.add((Projectile) actorA);
-    } else if (actorB instanceof Projectile && actorA instanceof Map) {
+    } else if (actorB instanceof Projectile
+        && (actorA instanceof Map || actorA instanceof Obstacle)) {
       bulletsToBeRemoved.add((Projectile) actorB);
     }
   }
