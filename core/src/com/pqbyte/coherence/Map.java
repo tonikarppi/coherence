@@ -1,9 +1,7 @@
 package com.pqbyte.coherence;
 
-<<<<<<< HEAD
-=======
+
 import com.badlogic.gdx.Application;
->>>>>>> 7fedfa43fbac35c6234baf512b63555a2127e40b
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;

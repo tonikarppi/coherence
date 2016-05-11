@@ -1,51 +1,103 @@
 package com.pqbyte.coherence;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
-/**
- * Created by Carl on 5/9/2016.
- */
-public class GameScreen implements Screen {
-    final Coherence2 game;
+import java.util.Iterator;
 
+public class GameScreen extends ScreenAdapter {
+  private static final float VIEWPORT_WIDTH = 30;
 
-    public GameScreen(final Coherence2 game) {
-        this.game = game;
+  private Stage stage;
+  private World world;
+  private Box2DDebugRenderer debugRenderer;
+  private Array<Projectile> bulletToBeRemoved;
+
+  public GameScreen() {
+    world = new World(new Vector2(0, 0), true);
+    bulletToBeRemoved = new Array<Projectile>();
+    world.setContactListener(new CollisionListener(bulletToBeRemoved));
+
+    Map map = new Map(
+        new Texture(Gdx.files.internal("wallpaper.jpg")),
+        Constants.WORLD_WIDTH,
+        Constants.WORLD_HEIGHT,
+        world
+    );
+
+    Player player = new Player(
+        new Texture(Gdx.files.internal("cube128.png")),
+        0,
+        Constants.WORLD_HEIGHT - 10,
+        world
+    );
+
+    player.addListener(new PlayerControlListener(player));
+
+    float screenWidth = Gdx.graphics.getWidth();
+    float screenHeight = Gdx.graphics.getHeight();
+
+    stage = new Stage(new ExtendViewport(
+        VIEWPORT_WIDTH, VIEWPORT_WIDTH * (screenHeight / screenWidth)));
+    stage.addListener(new ShootingListener(player));
+    stage.addActor(map);
+    stage.addActor(player);
+    stage.setKeyboardFocus(player);
+
+    Gdx.input.setInputProcessor(stage);
+
+    if (Constants.isDebug()) {
+      debugRenderer = new Box2DDebugRenderer();
     }
-    @Override
-    public void resize (int width, int height) {
-    }
+  }
 
-    @Override
-    public void show () {
+  @Override
+  public void dispose() {
+    stage.dispose();
+    world.dispose();
+    if (Constants.isDebug()) {
+      debugRenderer.dispose();
     }
+  }
 
-    @Override
-    public void hide () {
+  @Override
+  public void render(float delta) {
+    Gdx.gl.glClearColor(0, 0, 0, 1);
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+    removeUsedBullets();
+    world.step(1f / 60f, 6, 2);
+    stage.act(delta);
+    stage.draw();
+
+    if (Constants.isDebug()) {
+      Matrix4 debugMatrix = stage
+          .getBatch()
+          .getProjectionMatrix()
+          .cpy();
+
+      debugRenderer.render(world, debugMatrix);
     }
+  }
 
-    @Override
-    public void pause () {
+  /**
+   * Removes bullet actors from scene.
+   */
+  private void removeUsedBullets() {
+    Iterator<Projectile> bulletsIterator = bulletToBeRemoved.iterator();
+    while (bulletsIterator.hasNext()) {
+      Projectile bullet = bulletsIterator.next();
+      bullet.remove();
+      bulletsIterator.remove();
     }
-
-    @Override
-    public void resume () {
-    }
-
-    @Override
-    public void dispose () {
-    }
-
-    @Override
-    public void render(float delta){}
+  }
 }
-
-
