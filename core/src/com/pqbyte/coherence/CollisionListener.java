@@ -18,13 +18,15 @@ public class CollisionListener implements ContactListener {
 
   @Override
   public void beginContact(Contact contact) {
-    Actor a = (Actor) contact.getFixtureA().getBody().getUserData();
-    Actor b = (Actor) contact.getFixtureB().getBody().getUserData();
+    Actor actorA = (Actor) contact.getFixtureA().getBody().getUserData();
+    Actor actorB = (Actor) contact.getFixtureB().getBody().getUserData();
 
-    if (a instanceof Projectile && b instanceof Map) {
-      bulletsToBeRemoved.add((Projectile) a);
-    } else if (b instanceof Projectile && a instanceof Map) {
-      bulletsToBeRemoved.add((Projectile) b);
+    if (actorA instanceof Projectile
+        && (actorB instanceof Map || actorB instanceof Obstacle)) {
+      bulletsToBeRemoved.add((Projectile) actorA);
+    } else if (actorB instanceof Projectile
+        && (actorA instanceof Map || actorA instanceof Obstacle)) {
+      bulletsToBeRemoved.add((Projectile) actorB);
     }
   }
 

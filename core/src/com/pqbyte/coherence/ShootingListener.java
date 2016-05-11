@@ -12,8 +12,13 @@ public class ShootingListener extends InputListener {
   }
 
   @Override
-  public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-    player.shoot(x, y);
+  public boolean touchDown(
+      InputEvent event,
+      float targetX,
+      float targetY,
+      int pointer,
+      int button) {
+    player.shoot(targetX, targetY);
     return true;
   }
 }

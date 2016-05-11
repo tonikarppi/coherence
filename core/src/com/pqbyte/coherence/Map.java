@@ -32,6 +32,13 @@ public class Map extends Actor {
  // TextureAtlas buttonAtlas;
  // Stage stage;
 
+  /**
+   * The map where the game is played.
+   * @param texture The map texture.
+   * @param width The width of the map.
+   * @param height The height of the map.
+   * @param world The Box2D world.
+   */
   public Map(Texture texture, float width, float height, World world) {
     this.texture = texture;
     this.world = world;

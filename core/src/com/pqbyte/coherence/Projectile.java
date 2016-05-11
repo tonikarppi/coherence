@@ -15,6 +15,15 @@ public class Projectile extends Actor {
   private float toX;
   private float toY;
 
+  /**
+   * Represents a projectile being shot.
+   *
+   * @param fromX The starting x-position.
+   * @param fromY The starting y-position.
+   * @param toX The target x-position.
+   * @param toY The target y-position.
+   * @param world The Box2D world.
+   */
   public Projectile(float fromX, float fromY, float toX, float toY, World world) {
     this.world = world;
     this.toX = toX;
