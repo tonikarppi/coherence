@@ -22,6 +22,7 @@ import java.util.Iterator;
 public class Player extends Actor {
   private static final int PLAYER_SIZE = 2;
   private static final float STEP_SIZE = 20;
+  private static final int FULL_HEALTH = 100;
 
   private boolean goingLeft = false;
   private boolean goingRight = false;
@@ -76,17 +77,11 @@ public class Player extends Actor {
         bodyPos.y - getHeight() / 2
     );
 
-    getStage().getCamera().position.set(
-        getX() + getWidth() / 2f,
-        getY() + getHeight() / 2f,
-        0
-    );
-
     Stage stage = getStage();
-    Iterator<Projectile> projectileIterator = projectiles.iterator();
-    while (projectileIterator.hasNext()) {
-      stage.addActor(projectileIterator.next());
-      projectileIterator.remove();
+    Iterator<Projectile> iterator = projectiles.iterator();
+    while (iterator.hasNext()) {
+      stage.addActor(iterator.next());
+      iterator.remove();
     }
   }
 
@@ -95,6 +90,16 @@ public class Player extends Actor {
     if (!Constants.isDebug()) {
       batch.draw(sprite, getX(), getY(), getWidth(), getHeight());
     }
+  }
+
+  @Override
+  public boolean remove() {
+    // Check to see if bullet was already removed.
+    if (body.getUserData() != null) {
+      world.destroyBody(body);
+    }
+
+    return super.remove();
   }
 
   public void setGoingLeft(boolean going) {
@@ -121,12 +126,30 @@ public class Player extends Actor {
    */
   public void shoot(float targetX, float targetY) {
     projectiles.add(new Projectile(
+        this,
         getX() + getWidth() / 2,
         getY() + getHeight() / 2,
         targetX,
         targetY,
         world
     ));
+  }
+
+  /**
+   * Make the player take some damage.
+   *
+   * @param damage The amount of damage to player takes.
+   */
+  public void takeDamage(int damage) {
+    currentHealth -= damage;
+    if (currentHealth <= 0) {
+      Gdx.app.log(getClass().getSimpleName(), "Player is dead");
+      alive = false;
+    }
+  }
+
+  public boolean isAlive() {
+    return alive;
   }
 
   /**
