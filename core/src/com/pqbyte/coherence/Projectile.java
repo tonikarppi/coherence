@@ -75,7 +75,8 @@ public class Projectile extends Actor {
     FixtureDef fixtureDef = new FixtureDef();
     fixtureDef.shape = shape;
     fixtureDef.density = 10;
-    fixtureDef.filter.categoryBits = Constants.PHYSICS_ENTITY;
+    fixtureDef.isSensor = true;
+    fixtureDef.filter.categoryBits = Constants.BULLET_ENTITY;
     fixtureDef.filter.maskBits = Constants.WORLD_ENTITY;
 
     body.createFixture(fixtureDef);
@@ -83,5 +84,9 @@ public class Projectile extends Actor {
     shape.dispose();
 
     return body;
+  }
+
+  public Player getShooter() {
+    return shooter;
   }
 }
