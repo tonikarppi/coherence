@@ -1,8 +1,6 @@
 package com.pqbyte.coherence;
 
-import static com.pqbyte.coherence.Constants.PHYSICS_ENTITY;
-import static com.pqbyte.coherence.Constants.WORLD_ENTITY;
-
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -34,13 +32,16 @@ public class Player extends Actor {
   private Body body;
   private World world;
   private Array<Projectile> projectiles;
+  private int currentHealth = FULL_HEALTH;
+  private boolean alive = true;
 
   /**
    * The player entity that is controlled.
+   *
    * @param texture The player's texture.
-   * @param startX The starting x-position.
-   * @param startY The starting y-position.
-   * @param world The Box2D world.
+   * @param startX  The starting x-position.
+   * @param startY  The starting y-position.
+   * @param world   The Box2D world.
    */
   public Player(Texture texture, float startX, float startY, World world) {
     this.world = world;
