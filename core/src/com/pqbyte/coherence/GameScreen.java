@@ -94,8 +94,14 @@ public class GameScreen extends ScreenAdapter {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     removeUsedBullets();
+    removeDeadPlayers();
     world.step(1f / 60f, 6, 2);
     stage.act(delta);
+    stage.getCamera().position.set(
+        player.getX() + player.getWidth() / 2f,
+        player.getY() + player.getHeight() / 2f,
+        0
+    );
     stage.draw();
 
     if (Constants.isDebug()) {
