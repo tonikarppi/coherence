@@ -21,6 +21,8 @@ public class GameScreen extends ScreenAdapter {
   private World world;
   private Box2DDebugRenderer debugRenderer;
   private Array<Projectile> bulletToBeRemoved;
+  private Array<Player> alivePlayers;
+  private Player player;
 
   /**
    * The screen where the game is played.
@@ -28,9 +30,11 @@ public class GameScreen extends ScreenAdapter {
   public GameScreen() {
     world = new World(new Vector2(0, 0), true);
     bulletToBeRemoved = new Array<Projectile>();
+    alivePlayers = new Array<Player>();
+
     world.setContactListener(new CollisionListener(bulletToBeRemoved));
 
-    Player player = new Player(
+    player = new Player(
         new Texture(Gdx.files.internal("cube128.png")),
         20,
         20,
@@ -56,6 +60,17 @@ public class GameScreen extends ScreenAdapter {
     addObstacles();
     stage.addActor(player);
     stage.setKeyboardFocus(player);
+
+    Player enemy = new Player(
+        new Texture(Gdx.files.internal("cube128.png")),
+        10,
+        10,
+        world
+    );
+    stage.addActor(enemy);
+
+    alivePlayers.add(player);
+    alivePlayers.add(enemy);
 
     Gdx.input.setInputProcessor(stage);
 
@@ -97,11 +112,25 @@ public class GameScreen extends ScreenAdapter {
    * Removes bullet actors from scene.
    */
   private void removeUsedBullets() {
-    Iterator<Projectile> bulletsIterator = bulletToBeRemoved.iterator();
-    while (bulletsIterator.hasNext()) {
-      Projectile bullet = bulletsIterator.next();
+    Iterator<Projectile> iterator = bulletToBeRemoved.iterator();
+    while (iterator.hasNext()) {
+      Projectile bullet = iterator.next();
       bullet.remove();
-      bulletsIterator.remove();
+      iterator.remove();
+    }
+  }
+
+  /**
+   * Removes dead players from scene.
+   */
+  private void removeDeadPlayers() {
+    Iterator<Player> iterator = alivePlayers.iterator();
+    while (iterator.hasNext()) {
+      Player player = iterator.next();
+      if (!player.isAlive()) {
+        player.remove();
+        iterator.remove();
+      }
     }
   }
 
