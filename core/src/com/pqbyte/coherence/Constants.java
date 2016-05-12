@@ -11,6 +11,7 @@ public final class Constants {
   public static final int WORLD_HEIGHT = 100;
 
   /* Mask flags for Box2D filters. */
-  public static final short PHYSICS_ENTITY = 0x1;
-  public static final short WORLD_ENTITY = 0x2;
+  public static final short PLAYER_ENTITY = 0x1;
+  public static final short BULLET_ENTITY = 0x2;
+  public static final short WORLD_ENTITY = 0x3;
 }
