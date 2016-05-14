@@ -1,6 +1,5 @@
 package com.pqbyte.coherence;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -10,35 +9,45 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Projectile extends Actor {
 
+  private Player shooter;
   private Body body;
   private World world;
   private float toX;
   private float toY;
 
+  private float dx;
+  private float dy;
+  private float length;
+  private float speed;
+
   /**
    * Represents a projectile being shot.
    *
-   * @param fromX The starting x-position.
-   * @param fromY The starting y-position.
-   * @param toX The target x-position.
-   * @param toY The target y-position.
-   * @param world The Box2D world.
+   * @param shooter The player who fired the projectile.
+   *                @param fromX The origin
+   * @param world   The Box2D world.
    */
-  public Projectile(float fromX, float fromY, float toX, float toY, World world) {
+  public Projectile(Player shooter, float fromX, float fromY, float toX, float toY, World world) {
+    this.shooter = shooter;
     this.world = world;
-    this.toX = toX;
-    this.toY = toY;
-    setPosition(fromX, fromY);
+    dx = toX - fromX;
+    dy = toY - fromY;
+    length = (float) Math.sqrt(dx * dx + dy * dy);
+    speed = 80;
+
+    int offsetFromPlayer = 3;
+    setPosition(
+        fromX + offsetFromPlayer * dx / length,
+        fromY + offsetFromPlayer * dy / length);
     setSize(0.5f, 0.5f);
     body = createProjectileBody();
   }
 
   @Override
   public void act(float delta) {
-    float dx = toX - getX();
-    float dy = toY - getY();
-
-    body.applyLinearImpulse(dx, dy, getX(), getY(), false);
+    body.setLinearVelocity(
+        speed * dx / length,
+        speed * dy / length);
   }
 
   @Override
@@ -66,7 +75,8 @@ public class Projectile extends Actor {
     FixtureDef fixtureDef = new FixtureDef();
     fixtureDef.shape = shape;
     fixtureDef.density = 10;
-    fixtureDef.filter.categoryBits = Constants.PHYSICS_ENTITY;
+    fixtureDef.isSensor = true;
+    fixtureDef.filter.categoryBits = Constants.BULLET_ENTITY;
     fixtureDef.filter.maskBits = Constants.WORLD_ENTITY;
 
     body.createFixture(fixtureDef);
@@ -74,5 +84,9 @@ public class Projectile extends Actor {
     shape.dispose();
 
     return body;
+  }
+
+  public Player getShooter() {
+    return shooter;
   }
 }
