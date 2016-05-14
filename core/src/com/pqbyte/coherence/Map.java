@@ -75,7 +75,7 @@ public class Map extends Actor {
     FixtureDef properties = new FixtureDef();
     properties.shape = shape;
     properties.filter.categoryBits = Constants.WORLD_ENTITY;
-    properties.filter.maskBits = Constants.PHYSICS_ENTITY;
+    properties.filter.maskBits = Constants.BULLET_ENTITY | Constants.PLAYER_ENTITY;
 
     Body wall = world.createBody(def);
     wall.createFixture(properties);

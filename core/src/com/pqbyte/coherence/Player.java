@@ -1,8 +1,6 @@
 package com.pqbyte.coherence;
 
-import static com.pqbyte.coherence.Constants.PHYSICS_ENTITY;
-import static com.pqbyte.coherence.Constants.WORLD_ENTITY;
-
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -24,6 +22,7 @@ import java.util.Iterator;
 public class Player extends Actor {
   private static final int PLAYER_SIZE = 2;
   private static final float STEP_SIZE = 20;
+  private static final int FULL_HEALTH = 100;
 
   private boolean goingLeft = false;
   private boolean goingRight = false;
@@ -34,13 +33,16 @@ public class Player extends Actor {
   private Body body;
   private World world;
   private Array<Projectile> projectiles;
+  private int currentHealth = FULL_HEALTH;
+  private boolean alive = true;
 
   /**
    * The player entity that is controlled.
+   *
    * @param texture The player's texture.
-   * @param startX The starting x-position.
-   * @param startY The starting y-position.
-   * @param world The Box2D world.
+   * @param startX  The starting x-position.
+   * @param startY  The starting y-position.
+   * @param world   The Box2D world.
    */
   public Player(Texture texture, float startX, float startY, World world) {
     this.world = world;
@@ -75,17 +77,11 @@ public class Player extends Actor {
         bodyPos.y - getHeight() / 2
     );
 
-    getStage().getCamera().position.set(
-        getX() + getWidth() / 2f,
-        getY() + getHeight() / 2f,
-        0
-    );
-
     Stage stage = getStage();
-    Iterator<Projectile> projectileIterator = projectiles.iterator();
-    while (projectileIterator.hasNext()) {
-      stage.addActor(projectileIterator.next());
-      projectileIterator.remove();
+    Iterator<Projectile> iterator = projectiles.iterator();
+    while (iterator.hasNext()) {
+      stage.addActor(iterator.next());
+      iterator.remove();
     }
   }
 
@@ -94,6 +90,16 @@ public class Player extends Actor {
     if (!Constants.isDebug()) {
       batch.draw(sprite, getX(), getY(), getWidth(), getHeight());
     }
+  }
+
+  @Override
+  public boolean remove() {
+    // Check to see if bullet was already removed.
+    if (body.getUserData() != null) {
+      world.destroyBody(body);
+    }
+
+    return super.remove();
   }
 
   public void setGoingLeft(boolean going) {
@@ -120,12 +126,30 @@ public class Player extends Actor {
    */
   public void shoot(float targetX, float targetY) {
     projectiles.add(new Projectile(
+        this,
         getX() + getWidth() / 2,
         getY() + getHeight() / 2,
         targetX,
         targetY,
         world
     ));
+  }
+
+  /**
+   * Make the player take some damage.
+   *
+   * @param damage The amount of damage to player takes.
+   */
+  public void takeDamage(int damage) {
+    currentHealth -= damage;
+    if (currentHealth <= 0) {
+      Gdx.app.log(getClass().getSimpleName(), "Player is dead");
+      alive = false;
+    }
+  }
+
+  public boolean isAlive() {
+    return alive;
   }
 
   /**
@@ -150,8 +174,8 @@ public class Player extends Actor {
     FixtureDef fixtureDef = new FixtureDef();
     fixtureDef.shape = shape;
     fixtureDef.density = 100;
-    fixtureDef.filter.categoryBits = PHYSICS_ENTITY;
-    fixtureDef.filter.maskBits = WORLD_ENTITY;
+    fixtureDef.filter.categoryBits = Constants.PLAYER_ENTITY;
+    fixtureDef.filter.maskBits = Constants.WORLD_ENTITY;
 
     Body body = world.createBody(bodyDef);
     body.createFixture(fixtureDef);
