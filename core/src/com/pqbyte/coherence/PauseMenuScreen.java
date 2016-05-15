@@ -38,6 +38,7 @@ public class PauseMenuScreen implements Screen {
     font.draw(batch, "The game has been paused", 300, 350);
     font.draw(batch, "Tap anywhere to resume!", 300, 250);
     font.draw(batch, "Press Enter to return to main menu", 250, 200);
+    font.draw(batch, "Press Delete to return to exit", 250, 150);
     batch.end();
 
     if (Gdx.input.isTouched()) {
@@ -47,6 +48,9 @@ public class PauseMenuScreen implements Screen {
     }
     if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
       game.setScreen(new MainMenuScreen(game));
+    }
+    if (Gdx.input.isKeyPressed(Input.Keys.DEL)) {
+      Gdx.app.exit();
     }
   }
 
