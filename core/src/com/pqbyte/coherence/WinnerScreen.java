@@ -38,12 +38,12 @@ public class WinnerScreen implements Screen {
     font.draw(batch, "The game is over", 300, 350);
     font.draw(batch, "Tap anywhere to restart!", 300, 250);
     font.draw(batch, "Press Enter to return to main menu", 250, 200);
-    font.draw(batch, "Press Delete to return to exit", 250, 150);
+    font.draw(batch, "Press Delete to exit the game", 250, 150);
     batch.end();
 
     if (Gdx.input.isTouched()) {
       //ame.GameScreen.show();
-      game.setScreen(new GameScreen());
+      game.setScreen(new GameScreen(game));
       dispose();
     }
     if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {

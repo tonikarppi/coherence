@@ -43,7 +43,7 @@ public class PauseMenuScreen implements Screen {
 
     if (Gdx.input.isTouched()) {
      //ame.GameScreen.show();
-     game.setScreen(new GameScreen());
+     game.setScreen(new GameScreen(game));
       dispose();
     }
     if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {

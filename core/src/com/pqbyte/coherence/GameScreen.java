@@ -16,7 +16,7 @@ import java.util.Iterator;
 
 public class GameScreen extends ScreenAdapter {
   private static final float VIEWPORT_WIDTH = 80;
-
+  final Coherence game;
   private Stage stage;
   private World world;
   private Box2DDebugRenderer debugRenderer;
@@ -27,7 +27,9 @@ public class GameScreen extends ScreenAdapter {
   /**
    * The screen where the game is played.
    */
-  public GameScreen() {
+  public GameScreen(final Coherence game) {
+    //Coherence game = new Coherence();
+    this.game = game;
     world = new World(new Vector2(0, 0), true);
     bulletToBeRemoved = new Array<Projectile>();
     alivePlayers = new Array<Player>();
@@ -136,6 +138,7 @@ public class GameScreen extends ScreenAdapter {
       if (!player.isAlive()) {
         player.remove();
         iterator.remove();
+        game.setScreen(new WinnerScreen(game));
       }
     }
   }

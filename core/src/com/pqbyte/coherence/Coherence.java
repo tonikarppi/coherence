@@ -14,7 +14,7 @@ public class Coherence extends Game {
     font = new BitmapFont();
     this.setScreen(new MainMenuScreen(this));
     //this.setScreen(new MenuScreen(this));
-    gameScreen= new GameScreen();
+    //gameScreen= new GameScreen(game);
 
   }
 
