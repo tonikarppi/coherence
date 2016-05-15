@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 
 public class MainMenuScreen implements Screen {
@@ -44,7 +46,7 @@ public class MainMenuScreen implements Screen {
 
   @Override
   public void render(float delta) {
-    Gdx.gl.glClearColor(0, 0, 1, 1);
+    Gdx.gl.glClearColor(0, 0, 0, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
    camera.update();
 
@@ -67,7 +69,10 @@ public class MainMenuScreen implements Screen {
   }
 
   @Override
-  public void show() { /* Do nothing */ }
+  public void show() {
+    //skin = new Skin(Gdx.files.internal("ui/menuSkin.json"),atlas);
+    //ButtonGame = new TextButton("Play", skin/*textButtonSTyle*/);
+  }
 
   @Override
   public void resize(int width, int height) { /* Do nothing */ }

@@ -11,12 +11,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 /**
  * Created by Carl on 5/10/2016.
  */
-public class PauseMenuScreen implements Screen {
+public class WinnerScreen implements Screen {
 
   final Coherence game;
   OrthographicCamera camera;
 
-  public PauseMenuScreen(final Coherence game) {
+  public WinnerScreen(final Coherence game) {
     this.game = game;
 
     camera = new OrthographicCamera();
@@ -35,14 +35,14 @@ public class PauseMenuScreen implements Screen {
     batch.setProjectionMatrix(camera.combined);
 
     batch.begin();
-    font.draw(batch, "The game has been paused", 300, 350);
-    font.draw(batch, "Tap anywhere to resume!", 300, 250);
+    font.draw(batch, "The game is over", 300, 350);
+    font.draw(batch, "Tap anywhere to restart!", 300, 250);
     font.draw(batch, "Press Enter to return to main menu", 250, 200);
     batch.end();
 
     if (Gdx.input.isTouched()) {
-     //ame.GameScreen.show();
-     game.setScreen(new GameScreen());
+      //ame.GameScreen.show();
+      game.setScreen(new GameScreen());
       dispose();
     }
     if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
