@@ -1,21 +1,20 @@
 package com.pqbyte.coherence;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Coherence extends Game {
   public SpriteBatch batch;
   public BitmapFont font;
-  GameScreen gameScreen;
+  private Screen previousScreen;
+
   @Override
   public void create() {
     batch = new SpriteBatch();
     font = new BitmapFont();
-    this.setScreen(new MainMenuScreen(this));
-    //this.setScreen(new MenuScreen(this));
-    //gameScreen= new GameScreen(game);
-
+    setScreen(new MainMenuScreen(this));
   }
 
   @Override
@@ -23,13 +22,20 @@ public class Coherence extends Game {
     batch.dispose();
     font.dispose();
   }
+
   @Override
   public void pause() {
-
-    this.setScreen(new PauseMenuScreen(this));
-
+    previousScreen = getScreen();
   }
+
   public void resume() {
+    if (previousScreen instanceof GameScreen) {
+      setScreen(new PauseMenuScreen(this));
+    }
+  }
+
+  public Screen getPreviousScreen() {
+    return previousScreen;
   }
 }
 

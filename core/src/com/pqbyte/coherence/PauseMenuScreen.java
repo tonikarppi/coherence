@@ -3,15 +3,13 @@ package com.pqbyte.coherence;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-/**
- * Created by Carl on 5/10/2016.
- */
-public class PauseMenuScreen implements Screen {
+public class PauseMenuScreen extends ScreenAdapter {
 
   final Coherence game;
   OrthographicCamera camera;
@@ -42,8 +40,7 @@ public class PauseMenuScreen implements Screen {
     batch.end();
 
     if (Gdx.input.isTouched()) {
-     //ame.GameScreen.show();
-     game.setScreen(new GameScreen(game));
+      game.setScreen(game.getPreviousScreen());
       dispose();
     }
     if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
@@ -53,22 +50,4 @@ public class PauseMenuScreen implements Screen {
       Gdx.app.exit();
     }
   }
-
-  @Override
-  public void show() { /* Do nothing */ }
-
-  @Override
-  public void resize(int width, int height) { /* Do nothing */ }
-
-  @Override
-  public void pause() { /* Do nothing */}
-
-  @Override
-  public void resume() { /* Do nothing */}
-
-  @Override
-  public void hide() { /* Do nothing */ }
-
-  @Override
-  public void dispose() { /* Do nothing */ }
 }
