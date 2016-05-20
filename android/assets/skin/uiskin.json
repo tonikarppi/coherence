@@ -28,6 +28,12 @@
       "b": 0,
       "g": 0,
       "r": 0
+    },
+    "grey": {
+      "a": 1,
+      "r": 0.26,
+      "g": 0.26,
+      "b": 0.26
     }
   },
   "com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable": {
@@ -57,7 +63,7 @@
       "down": "default-round-down",
       "up": "default-round",
       "font": "default-font",
-      "fontColor": "white"
+      "fontColor": "grey"
     },
     "toggle": {
       "down": "default-round-down",
