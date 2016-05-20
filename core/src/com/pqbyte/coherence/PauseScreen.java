@@ -17,12 +17,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-public class PauseMenuScreen extends ScreenAdapter {
+public class PauseScreen extends ScreenAdapter {
 
   private Stage stage;
   private Coherence game;
 
-  public PauseMenuScreen(Coherence game) {
+  public PauseScreen(Coherence game) {
     this.game = game;
     Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
     Button button = createButton(skin);
