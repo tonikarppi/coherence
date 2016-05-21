@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -25,17 +26,40 @@ public class WinnerScreen extends ScreenAdapter {
   public WinnerScreen(Coherence game) {
     this.game = game;
     Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
-    Button restartButton = createRestartButton(skin);
-    Button exitButton = createExitButton(skin);
-    Button menuButton = createMenuButton(skin);
-    Label titleLabel = createTitleLabel(skin);
-
+    Table table = new Table();
+    table.setFillParent(true);
     stage = new Stage();
-    stage.addActor(restartButton);
-    stage.addActor(exitButton);
-    stage.addActor(menuButton);
-    stage.addActor(titleLabel);
+    stage.addActor(table);
 
+    Label titleLabel = createTitleLabel(skin);
+    table.add(titleLabel).spaceBottom(20);
+    table.row();
+
+    int buttonWidth = 300;
+    int buttonHeight = 60;
+    Button restartButton = createRestartButton(skin);
+    table.add(restartButton)
+        .width(buttonWidth)
+        .height(buttonHeight)
+        .spaceBottom(20);
+
+    table.row();
+
+    Button menuButton = createMenuButton(skin);
+    table.add(menuButton)
+        .width(buttonWidth)
+        .height(buttonHeight)
+        .spaceBottom(20);
+    table.row();
+
+    Button exitButton = createExitButton(skin);
+    table.add(exitButton)
+        .width(buttonWidth)
+        .height(buttonHeight)
+        .spaceBottom(20);
+    table.row();
+
+    table.setDebug(Constants.isDebug());
     Gdx.input.setInputProcessor(stage);
   }
 
@@ -72,18 +96,6 @@ public class WinnerScreen extends ScreenAdapter {
 
   private Button createRestartButton(Skin skin) {
     TextButton button = new TextButton("RESTART GAME", skin, "default");
-    int buttonWidth = 300;
-    int buttonHeight = 60;
-    button.setWidth(buttonWidth);
-    button.setHeight(buttonHeight);
-
-    int width = Gdx.graphics.getWidth();
-    int height = Gdx.graphics.getHeight();
-
-    button.setPosition(
-        (width - buttonWidth) / 2,
-        (height - buttonHeight) / 2 - height / 4
-    );
 
     button.addListener(new ClickListener() {
       @Override
@@ -92,22 +104,12 @@ public class WinnerScreen extends ScreenAdapter {
         dispose();
       }
     });
+
     return button;
   }
+
   private Button createExitButton(Skin skin) {
     TextButton button = new TextButton("EXIT THE GAME", skin, "default");
-    int buttonWidth = 300;
-    int buttonHeight = 60;
-    button.setWidth(buttonWidth);
-    button.setHeight(buttonHeight);
-
-    int width = Gdx.graphics.getWidth();
-    int height = Gdx.graphics.getHeight();
-
-    button.setPosition(
-        (width - buttonWidth) / 2,
-        (height - buttonHeight) / 2 - height / 3
-    );
 
     button.addListener(new ClickListener() {
       @Override
@@ -116,23 +118,12 @@ public class WinnerScreen extends ScreenAdapter {
         dispose();
       }
     });
+
     return button;
   }
 
   private Button createMenuButton(Skin skin) {
     TextButton button = new TextButton("RETURN TO MAIN MENU", skin, "default");
-    int buttonWidth = 300;
-    int buttonHeight = 60;
-    button.setWidth(buttonWidth);
-    button.setHeight(buttonHeight);
-
-    int width = Gdx.graphics.getWidth();
-    int height = Gdx.graphics.getHeight();
-
-    button.setPosition(
-        (width - buttonWidth) / 2,
-        (height - buttonHeight) / 2 - height / 6
-    );
 
     button.addListener(new ClickListener() {
       @Override
@@ -141,6 +132,7 @@ public class WinnerScreen extends ScreenAdapter {
         dispose();
       }
     });
+
     return button;
   }
 }
