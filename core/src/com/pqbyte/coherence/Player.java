@@ -1,6 +1,7 @@
 package com.pqbyte.coherence;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -35,6 +36,7 @@ public class Player extends Actor {
   private Array<Projectile> projectiles;
   private int currentHealth = FULL_HEALTH;
   private boolean alive = true;
+  Sound laserSound;
 
   /**
    * The player entity that is controlled.
@@ -50,6 +52,7 @@ public class Player extends Actor {
     setBounds(startX, startY, PLAYER_SIZE, PLAYER_SIZE);
     body = createPlayerBody(world);
     projectiles = new Array<Projectile>();
+    laserSound = Gdx.audio.newSound(Gdx.files.internal("Lasersound.wav"));
   }
 
   @Override
@@ -133,6 +136,7 @@ public class Player extends Actor {
         targetY,
         world
     ));
+    laserSound.play();
   }
 
   /**
