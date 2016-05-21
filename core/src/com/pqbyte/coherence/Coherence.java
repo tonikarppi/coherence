@@ -30,7 +30,7 @@ public class Coherence extends Game {
 
   public void resume() {
     if (previousScreen instanceof GameScreen) {
-      setScreen(new PauseMenuScreen(this));
+      setScreen(new PauseScreen(this));
     }
   }
 
