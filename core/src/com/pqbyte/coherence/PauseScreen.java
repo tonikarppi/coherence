@@ -40,8 +40,14 @@ public class PauseScreen extends ScreenAdapter {
     Label titleLabel = createTitleLabel(skin);
     table.add(titleLabel).spaceBottom(160);
     table.row();
-    Button button = createButton(skin);
-    table.add(button).width(300).height(60);
+    Button resumeButton = createResumeButton(skin);
+    table.add(resumeButton).width(300).height(60);
+
+    Button mainButton = createMainButton(skin);
+    table.add(mainButton).width(300).height(60);
+
+    Button exitButton = createExitButton(skin);
+    table.add(exitButton).width(300).height(60);
 
     table.setDebug(Constants.isDebug());
 
@@ -72,7 +78,7 @@ public class PauseScreen extends ScreenAdapter {
     return label;
   }
 
-  private Button createButton(Skin skin) {
+  private Button createResumeButton(Skin skin) {
     TextButton button = new TextButton("RESUME GAME", skin, "default");
 
     button.addListener(new ClickListener() {
@@ -80,6 +86,35 @@ public class PauseScreen extends ScreenAdapter {
       public void clicked(InputEvent event, float xPos, float yPos) {
         game.setScreen(game.getPreviousScreen());
         Gdx.input.setInputProcessor(game.getPreviousInputProcessor());
+        dispose();
+      }
+    });
+
+    return button;
+  }
+
+  private Button createMainButton(Skin skin) {
+    TextButton button = new TextButton("RETURN TO MAIN MENU", skin, "default");
+
+    button.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float xPos, float yPos) {
+        game.setScreen(new MenuScreen(game));
+        //Gdx.input.setInputProcessor(game.getPreviousInputProcessor());
+        dispose();
+      }
+    });
+
+    return button;
+  }
+
+  private Button createExitButton(Skin skin) {
+    TextButton button = new TextButton("EXIT THE GAME", skin, "default");
+
+    button.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float xPos, float yPos) {
+        Gdx.app.exit();
         dispose();
       }
     });
