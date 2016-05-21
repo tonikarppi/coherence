@@ -37,6 +37,7 @@ public class Player extends Actor {
   private int currentHealth = FULL_HEALTH;
   private boolean alive = true;
   Sound laserSound;
+  Sound crashSound;
 
   /**
    * The player entity that is controlled.
@@ -53,6 +54,7 @@ public class Player extends Actor {
     body = createPlayerBody(world);
     projectiles = new Array<Projectile>();
     laserSound = Gdx.audio.newSound(Gdx.files.internal("Lasersound.wav"));
+    crashSound = Gdx.audio.newSound(Gdx.files.internal("Crashsound.wav"));
   }
 
   @Override
@@ -146,6 +148,7 @@ public class Player extends Actor {
    */
   public void takeDamage(int damage) {
     currentHealth -= damage;
+    crashSound.play();
     if (currentHealth <= 0) {
       Gdx.app.log(getClass().getSimpleName(), "Player is dead");
       alive = false;

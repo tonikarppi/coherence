@@ -35,7 +35,7 @@ public class GameScreen extends ScreenAdapter {
     world = new World(new Vector2(0, 0), true);
     bulletToBeRemoved = new Array<Projectile>();
     alivePlayers = new Array<Player>();
-    
+
 
     world.setContactListener(new CollisionListener(bulletToBeRemoved));
 
