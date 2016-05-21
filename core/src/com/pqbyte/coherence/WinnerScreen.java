@@ -27,11 +27,13 @@ public class WinnerScreen extends ScreenAdapter {
     Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
     Button restartButton = createRestartButton(skin);
     Button exitButton = createExitButton(skin);
+    Button menuButton = createMenuButton(skin);
     Label titleLabel = createTitleLabel(skin);
 
     stage = new Stage();
     stage.addActor(restartButton);
     stage.addActor(exitButton);
+    stage.addActor(menuButton);
     stage.addActor(titleLabel);
 
     Gdx.input.setInputProcessor(stage);
@@ -111,6 +113,31 @@ public class WinnerScreen extends ScreenAdapter {
       @Override
       public void clicked(InputEvent event, float xPos, float yPos) {
         Gdx.app.exit();
+        dispose();
+      }
+    });
+    return button;
+  }
+
+  private Button createMenuButton(Skin skin) {
+    TextButton button = new TextButton("RETURN TO MAIN MENU", skin, "default");
+    int buttonWidth = 300;
+    int buttonHeight = 60;
+    button.setWidth(buttonWidth);
+    button.setHeight(buttonHeight);
+
+    int width = Gdx.graphics.getWidth();
+    int height = Gdx.graphics.getHeight();
+
+    button.setPosition(
+        (width - buttonWidth) / 2,
+        (height - buttonHeight) / 2 - height / 6
+    );
+
+    button.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float xPos, float yPos) {
+        game.setScreen(new MenuScreen(game));
         dispose();
       }
     });
