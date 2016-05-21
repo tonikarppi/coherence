@@ -192,4 +192,9 @@ public class Player extends Actor {
 
     return body;
   }
+  @Override
+  public void dispose() {
+    crashSound.dispose();
+    laserSound.dispose();
+  }
 }
