@@ -2,6 +2,7 @@ package com.pqbyte.coherence;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -22,15 +24,26 @@ public class PauseScreen extends ScreenAdapter {
   private Stage stage;
   private Coherence game;
 
+  /**
+   * The screen that comes up when game is paused.
+   *
+   * @param game The game instance.
+   */
   public PauseScreen(Coherence game) {
     this.game = game;
     Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
-    Button button = createButton(skin);
-    Label titleLabel = createTitleLabel(skin);
-
     stage = new Stage();
-    stage.addActor(button);
-    stage.addActor(titleLabel);
+    Table table = new Table();
+    table.setFillParent(true);
+    stage.addActor(table);
+
+    Label titleLabel = createTitleLabel(skin);
+    table.add(titleLabel).spaceBottom(160);
+    table.row();
+    Button button = createButton(skin);
+    table.add(button).width(300).height(60);
+
+    table.setDebug(Constants.isDebug());
 
     Gdx.input.setInputProcessor(stage);
   }
@@ -40,6 +53,7 @@ public class PauseScreen extends ScreenAdapter {
     Gdx.gl.glClearColor(0, 0, 0, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+    stage.act(delta);
     stage.draw();
   }
 
@@ -55,36 +69,17 @@ public class PauseScreen extends ScreenAdapter {
     label.setSize(label.getWidth() * 2, label.getHeight());
     label.setFontScale(2);
 
-    int width = Gdx.graphics.getWidth();
-    int height = Gdx.graphics.getHeight();
-
-    label.setPosition(
-        (width - label.getWidth()) / 2,
-        (height - label.getHeight()) / 2 + height / 4
-    );
-
     return label;
   }
 
   private Button createButton(Skin skin) {
     TextButton button = new TextButton("RESUME GAME", skin, "default");
-    int buttonWidth = 300;
-    int buttonHeight = 60;
-    button.setWidth(buttonWidth);
-    button.setHeight(buttonHeight);
-
-    int width = Gdx.graphics.getWidth();
-    int height = Gdx.graphics.getHeight();
-
-    button.setPosition(
-        (width - buttonWidth) / 2,
-        (height - buttonHeight) / 2 - height / 4
-    );
 
     button.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float xPos, float yPos) {
         game.setScreen(game.getPreviousScreen());
+        Gdx.input.setInputProcessor(game.getPreviousInputProcessor());
         dispose();
       }
     });
