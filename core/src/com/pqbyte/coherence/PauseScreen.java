@@ -79,6 +79,7 @@ public class PauseScreen extends ScreenAdapter {
       @Override
       public void clicked(InputEvent event, float xPos, float yPos) {
         game.setScreen(game.getPreviousScreen());
+        Gdx.input.setInputProcessor(game.getPreviousInputProcessor());
         dispose();
       }
     });
