@@ -40,14 +40,20 @@ public class PauseScreen extends ScreenAdapter {
     Label titleLabel = createTitleLabel(skin);
     table.add(titleLabel).spaceBottom(160);
     table.row();
+
+    int buttonWidth = 300;
+    int buttonHeight = 60;
+
     Button resumeButton = createResumeButton(skin);
-    table.add(resumeButton).width(300).height(60);
+    table.add(resumeButton).width(buttonWidth).height(buttonHeight);
+    table.row();
 
     Button mainButton = createMainButton(skin);
-    table.add(mainButton).width(300).height(60);
+    table.add(mainButton).width(buttonWidth).height(buttonHeight);
+    table.row();
 
     Button exitButton = createExitButton(skin);
-    table.add(exitButton).width(300).height(60);
+    table.add(exitButton).width(buttonWidth).height(buttonHeight);
 
     table.setDebug(Constants.isDebug());
 
