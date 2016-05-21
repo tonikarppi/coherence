@@ -14,7 +14,7 @@ public class Coherence extends Game {
   public void create() {
     batch = new SpriteBatch();
     font = new BitmapFont();
-    setScreen(new MainMenuScreen(this));
+    setScreen(new MenuScreen(this));
   }
 
   @Override
