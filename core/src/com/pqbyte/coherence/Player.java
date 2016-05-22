@@ -33,14 +33,13 @@ public class Player extends Actor {
   private Array<Projectile> projectiles;
   private int currentHealth = FULL_HEALTH;
   private boolean alive = true;
-<<<<<<< HEAD
+
   Sound laserSound;
   Sound crashSound;
-=======
+
   private Touchpad movementController;
   private Touchpad shooterController;
   private double lastShotTime = 0;
->>>>>>> f8852e86d037e9c8c86115788ab6f94e70bd838a
 
   /**
    * The player entity that is controlled.
@@ -56,7 +55,7 @@ public class Player extends Actor {
     setBounds(startX, startY, PLAYER_SIZE, PLAYER_SIZE);
     body = createPlayerBody(world);
     projectiles = new Array<Projectile>();
-    laserSound = Gdx.audio.newSound(Gdx.files.internal("Lasersound.wav"));
+    laserSound = Gdx.audio.newSound(Gdx.files.internal("Lasersound.ogg"));
     crashSound = Gdx.audio.newSound(Gdx.files.internal("Crashsound.wav"));
   }
 
@@ -189,7 +188,7 @@ public class Player extends Actor {
 
     return body;
   }
-  @Override
+  //@Override
   public void dispose() {
     crashSound.dispose();
     laserSound.dispose();

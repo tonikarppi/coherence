@@ -2,6 +2,7 @@ package com.pqbyte.coherence;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -25,6 +26,7 @@ public class GameScreen extends ScreenAdapter {
   private Array<Player> alivePlayers;
   private Player player;
   private Hud hud;
+  Music gameMusic;
 
 
   /**
@@ -36,6 +38,8 @@ public class GameScreen extends ScreenAdapter {
     bulletToBeRemoved = new Array<Projectile>();
     alivePlayers = new Array<Player>();
 
+    gameMusic = Gdx.audio.newMusic(Gdx.files.internal("Gamemusic.ogg"));
+    gameMusic.setLooping(true);
 
     world.setContactListener(new CollisionListener(bulletToBeRemoved));
 
@@ -95,6 +99,13 @@ public class GameScreen extends ScreenAdapter {
     if (Constants.isDebug()) {
       debugRenderer.dispose();
     }
+    gameMusic.dispose();
+  }
+
+  @Override
+  public void show() {
+    // Start playing when screen is shown
+    gameMusic.play();
   }
 
   @Override
