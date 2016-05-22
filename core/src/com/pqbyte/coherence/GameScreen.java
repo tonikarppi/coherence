@@ -43,8 +43,6 @@ public class GameScreen extends ScreenAdapter {
         world
     );
 
-    player.addListener(new PlayerControlListener(player));
-
     float screenWidth = Gdx.graphics.getWidth();
     float screenHeight = Gdx.graphics.getHeight();
 
