@@ -79,6 +79,10 @@ public class GameScreen extends ScreenAdapter {
     if (Constants.isDebug()) {
       debugRenderer = new Box2DDebugRenderer();
     }
+
+    hud = new Hud(gameStage.getBatch());
+    player.setHud(hud);
+    Gdx.input.setInputProcessor(hud.getStage());
   }
 
   @Override
@@ -98,22 +102,27 @@ public class GameScreen extends ScreenAdapter {
     removeUsedBullets();
     removeDeadPlayers();
     world.step(1f / 60f, 6, 2);
-    stage.act(delta);
-    stage.getCamera().position.set(
+    gameStage.act(delta);
+    gameStage.getCamera().position.set(
         player.getX() + player.getWidth() / 2f,
         player.getY() + player.getHeight() / 2f,
         0
     );
-    stage.draw();
+    gameStage.draw();
 
     if (Constants.isDebug()) {
-      Matrix4 debugMatrix = stage
+      Matrix4 debugMatrix = gameStage
           .getBatch()
           .getProjectionMatrix()
           .cpy();
 
       debugRenderer.render(world, debugMatrix);
     }
+
+    Stage hudStage = hud.getStage();
+    hudStage.getBatch().setProjectionMatrix(hudStage.getCamera().combined);
+    hudStage.act(delta);
+    hudStage.draw();
   }
 
   /**
