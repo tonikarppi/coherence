@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.Iterator;
@@ -21,14 +22,10 @@ import java.util.Iterator;
  * The player being controlled.
  */
 public class Player extends Actor {
-  private static final int PLAYER_SIZE = 2;
-  private static final float STEP_SIZE = 20;
-  private static final int FULL_HEALTH = 100;
+  private static final int NANOSECONDS_IN_SECOND = 1000000000;
 
-  private boolean goingLeft = false;
-  private boolean goingRight = false;
-  private boolean goingUp = false;
-  private boolean goingDown = false;
+  private static final int PLAYER_SIZE = 2;
+  private static final int FULL_HEALTH = 100;
 
   private Sprite sprite;
   private Body body;
@@ -36,8 +33,14 @@ public class Player extends Actor {
   private Array<Projectile> projectiles;
   private int currentHealth = FULL_HEALTH;
   private boolean alive = true;
+<<<<<<< HEAD
   Sound laserSound;
   Sound crashSound;
+=======
+  private Touchpad movementController;
+  private Touchpad shooterController;
+  private double lastShotTime = 0;
+>>>>>>> f8852e86d037e9c8c86115788ab6f94e70bd838a
 
   /**
    * The player entity that is controlled.
@@ -62,20 +65,25 @@ public class Player extends Actor {
     float horizontal = 0;
     float vertical = 0;
 
-    if (goingLeft) {
-      horizontal -= STEP_SIZE;
-    }
-    if (goingRight) {
-      horizontal += STEP_SIZE;
-    }
-    if (goingUp) {
-      vertical += STEP_SIZE;
-    }
-    if (goingDown) {
-      vertical -= STEP_SIZE;
+    body.setLinearVelocity(horizontal, vertical);
+    if (movementController != null) {
+      body.setLinearVelocity(
+          movementController.getKnobPercentX() * 20,
+          movementController.getKnobPercentY() * 20
+      );
     }
 
-    body.setLinearVelocity(horizontal, vertical);
+    double currentTime = System.nanoTime();
+    if (shooterController != null && (currentTime - lastShotTime > NANOSECONDS_IN_SECOND * 0.2)) {
+      if (shooterController.getKnobPercentX() * shooterController.getKnobPercentY() != 0.0f) {
+        shoot(
+            shooterController.getKnobPercentX(),
+            shooterController.getKnobPercentY()
+        );
+        lastShotTime = currentTime;
+      }
+    }
+
     Vector2 bodyPos = body.getPosition();
     setPosition(
         bodyPos.x - getWidth() / 2,
@@ -107,20 +115,9 @@ public class Player extends Actor {
     return super.remove();
   }
 
-  public void setGoingLeft(boolean going) {
-    goingLeft = going;
-  }
-
-  public void setGoingRight(boolean going) {
-    goingRight = going;
-  }
-
-  public void setGoingUp(boolean going) {
-    goingUp = going;
-  }
-
-  public void setGoingDown(boolean going) {
-    goingDown = going;
+  public void setHud(Hud hud) {
+    movementController = hud.getMovementController();
+    shooterController = hud.getShooterController();
   }
 
   /**
@@ -134,8 +131,8 @@ public class Player extends Actor {
         this,
         getX() + getWidth() / 2,
         getY() + getHeight() / 2,
-        targetX,
-        targetY,
+        getX() + getWidth() / 2 + targetX,
+        getY() + getHeight() / 2 + targetY,
         world
     ));
     laserSound.play();
