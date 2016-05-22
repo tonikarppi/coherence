@@ -17,18 +17,18 @@ import java.util.Iterator;
 public class GameScreen extends ScreenAdapter {
   private static final float VIEWPORT_WIDTH = 80;
   final Coherence game;
-  private Stage stage;
+  private Stage gameStage;
   private World world;
   private Box2DDebugRenderer debugRenderer;
   private Array<Projectile> bulletToBeRemoved;
   private Array<Player> alivePlayers;
   private Player player;
+  private Hud hud;
 
   /**
    * The screen where the game is played.
    */
   public GameScreen(final Coherence game) {
-    //Coherence game = new Coherence();
     this.game = game;
     world = new World(new Vector2(0, 0), true);
     bulletToBeRemoved = new Array<Projectile>();
@@ -55,13 +55,15 @@ public class GameScreen extends ScreenAdapter {
         world
     );
 
-    stage = new Stage(new ExtendViewport(
-        VIEWPORT_WIDTH, VIEWPORT_WIDTH * (screenHeight / screenWidth)));
-    stage.addListener(new ShootingListener(player));
-    stage.addActor(map);
+    gameStage = new Stage(
+        new ExtendViewport(
+            VIEWPORT_WIDTH,
+            VIEWPORT_WIDTH * (screenHeight / screenWidth))
+    );
+    gameStage.addActor(map);
     addObstacles();
-    stage.addActor(player);
-    stage.setKeyboardFocus(player);
+    gameStage.addActor(player);
+    gameStage.setKeyboardFocus(player);
 
     Player enemy = new Player(
         new Texture(Gdx.files.internal("cube128.png")),
@@ -69,12 +71,12 @@ public class GameScreen extends ScreenAdapter {
         10,
         world
     );
-    stage.addActor(enemy);
+    gameStage.addActor(enemy);
 
     alivePlayers.add(player);
     alivePlayers.add(enemy);
 
-    Gdx.input.setInputProcessor(stage);
+    Gdx.input.setInputProcessor(gameStage);
 
     if (Constants.isDebug()) {
       debugRenderer = new Box2DDebugRenderer();
@@ -83,7 +85,7 @@ public class GameScreen extends ScreenAdapter {
 
   @Override
   public void dispose() {
-    stage.dispose();
+    gameStage.dispose();
     world.dispose();
     if (Constants.isDebug()) {
       debugRenderer.dispose();
@@ -224,12 +226,12 @@ public class GameScreen extends ScreenAdapter {
         world
     );
 
-    stage.addActor(obstacleLeftHorizontal);
-    stage.addActor(obstacleLeftVertical);
-    stage.addActor(obstacleRightHorizontal);
-    stage.addActor(obstacleRightVertical);
-    stage.addActor(obstacleCenterVertical);
-    stage.addActor(obstacleBottomRight);
-    stage.addActor(obstacleTopLeft);
+    gameStage.addActor(obstacleLeftHorizontal);
+    gameStage.addActor(obstacleLeftVertical);
+    gameStage.addActor(obstacleRightHorizontal);
+    gameStage.addActor(obstacleRightVertical);
+    gameStage.addActor(obstacleCenterVertical);
+    gameStage.addActor(obstacleBottomRight);
+    gameStage.addActor(obstacleTopLeft);
   }
 }
