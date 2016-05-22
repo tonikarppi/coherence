@@ -3,7 +3,6 @@ package com.pqbyte.coherence;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Matrix4;
@@ -23,11 +22,10 @@ public class GameScreen extends ScreenAdapter {
   private World world;
   private Box2DDebugRenderer debugRenderer;
   private Array<Projectile> bulletToBeRemoved;
-  private Array<Player> alivePlayers;
+  private Array<Person> alivePeople;
   private Player player;
   private Hud hud;
-  Music gameMusic;
-
+  //private Music gameMusic;
 
   /**
    * The screen where the game is played.
@@ -36,22 +34,29 @@ public class GameScreen extends ScreenAdapter {
     this.game = game;
     world = new World(new Vector2(0, 0), true);
     bulletToBeRemoved = new Array<Projectile>();
-    alivePlayers = new Array<Player>();
+    alivePeople = new Array<Person>();
 
-    gameMusic = Gdx.audio.newMusic(Gdx.files.internal("Gamemusic.ogg"));
-    gameMusic.setLooping(true);
+    //gameMusic = Gdx.audio.newMusic(Gdx.files.internal("Gamemusic.ogg"));
+    //gameMusic.setLooping(true);
 
     world.setContactListener(new CollisionListener(bulletToBeRemoved));
 
+    float screenWidth = Gdx.graphics.getWidth();
+    float screenHeight = Gdx.graphics.getHeight();
+
+    gameStage = new Stage(
+        new ExtendViewport(
+            VIEWPORT_WIDTH,
+            VIEWPORT_WIDTH * (screenHeight / screenWidth))
+    );
+    hud = new Hud(gameStage.getBatch());
     player = new Player(
         new Texture(Gdx.files.internal("cube128.png")),
         20,
         20,
-        world
+        world,
+        hud
     );
-
-    float screenWidth = Gdx.graphics.getWidth();
-    float screenHeight = Gdx.graphics.getHeight();
 
     Map map = new Map(
         new Texture(Gdx.files.internal("wallpaper.jpg")),
@@ -60,17 +65,12 @@ public class GameScreen extends ScreenAdapter {
         world
     );
 
-    gameStage = new Stage(
-        new ExtendViewport(
-            VIEWPORT_WIDTH,
-            VIEWPORT_WIDTH * (screenHeight / screenWidth))
-    );
     gameStage.addActor(map);
     addObstacles();
     gameStage.addActor(player);
     gameStage.setKeyboardFocus(player);
 
-    Player enemy = new Player(
+    Enemy enemy = new Enemy(
         new Texture(Gdx.files.internal("cube128.png")),
         10,
         10,
@@ -78,8 +78,8 @@ public class GameScreen extends ScreenAdapter {
     );
     gameStage.addActor(enemy);
 
-    alivePlayers.add(player);
-    alivePlayers.add(enemy);
+    alivePeople.add(player);
+    alivePeople.add(enemy);
 
     Gdx.input.setInputProcessor(gameStage);
 
@@ -87,8 +87,6 @@ public class GameScreen extends ScreenAdapter {
       debugRenderer = new Box2DDebugRenderer();
     }
 
-    hud = new Hud(gameStage.getBatch());
-    player.setHud(hud);
     Gdx.input.setInputProcessor(hud.getStage());
   }
 
@@ -99,13 +97,13 @@ public class GameScreen extends ScreenAdapter {
     if (Constants.isDebug()) {
       debugRenderer.dispose();
     }
-    gameMusic.dispose();
+    //gameMusic.dispose();
   }
 
   @Override
   public void show() {
     // Start playing when screen is shown
-    gameMusic.play();
+    //gameMusic.play();
   }
 
   @Override
@@ -155,9 +153,9 @@ public class GameScreen extends ScreenAdapter {
    * Removes dead players from scene.
    */
   private void removeDeadPlayers() {
-    Iterator<Player> iterator = alivePlayers.iterator();
+    Iterator<Person> iterator = alivePeople.iterator();
     while (iterator.hasNext()) {
-      Player player = iterator.next();
+      Person player = iterator.next();
       if (!player.isAlive()) {
         player.remove();
         iterator.remove();
