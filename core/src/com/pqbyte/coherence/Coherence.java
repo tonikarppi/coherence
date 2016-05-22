@@ -12,6 +12,11 @@ public class Coherence extends Game {
   public BitmapFont font;
   private Screen previousScreen;
   private InputProcessor previousInputProcessor;
+  private PlayServices playServices;
+
+  public Coherence(PlayServices playServices) {
+    this.playServices = playServices;
+  }
 
   @Override
   public void create() {

@@ -2,5 +2,7 @@
 <resources>
 
     <string name="app_name">coherence</string>
+    <string name="achievement_dum_dum">Achievements</string>
+    <string name="leaderboard_highest">Highscores</string>
 
 </resources>
