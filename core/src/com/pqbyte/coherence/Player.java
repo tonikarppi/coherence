@@ -49,9 +49,10 @@ public class Player extends Actor {
    * @param startY  The starting y-position.
    * @param world   The Box2D world.
    */
-  public Player(Texture texture, float startX, float startY, World world) {
+  public Player(Texture texture, float startX, float startY, World world, float red,float green,float blue,float alpha) {
     this.world = world;
     sprite = new Sprite(texture);
+    sprite.setColor(red,green,blue,alpha);
     setBounds(startX, startY, PLAYER_SIZE, PLAYER_SIZE);
     body = createPlayerBody(world);
     projectiles = new Array<Projectile>();
@@ -193,4 +194,5 @@ public class Player extends Actor {
     crashSound.dispose();
     laserSound.dispose();
   }
+
 }
