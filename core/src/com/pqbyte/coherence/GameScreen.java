@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Matrix4;
@@ -47,19 +48,23 @@ public class GameScreen extends ScreenAdapter {
         new Texture(Gdx.files.internal("cube128.png")),
         20,
         20,
-        world
+        world,
+        0,
+        0,
+        1,
+        0
     );
 
     float screenWidth = Gdx.graphics.getWidth();
     float screenHeight = Gdx.graphics.getHeight();
 
     Map map = new Map(
-        new Texture(Gdx.files.internal("wallpaper.jpg")),
+        new Texture(Gdx.files.internal("Gamemap.png")),
         Constants.WORLD_WIDTH,
         Constants.WORLD_HEIGHT,
         world
     );
-
+//wallpaper.jpg
     gameStage = new Stage(
         new ExtendViewport(
             VIEWPORT_WIDTH,
@@ -74,7 +79,11 @@ public class GameScreen extends ScreenAdapter {
         new Texture(Gdx.files.internal("cube128.png")),
         10,
         10,
-        world
+        world,
+        1,
+        0,
+        0,
+        0
     );
     gameStage.addActor(enemy);
 
