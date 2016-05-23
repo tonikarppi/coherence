@@ -6,6 +6,7 @@ import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.ai.utils.Location;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -35,8 +36,9 @@ public class Person extends Actor implements Steerable<Vector2> {
   private Array<Projectile> projectiles;
   private int currentHealth = FULL_HEALTH;
   private boolean alive = true;
-  //private Sound laserSound;
-  //private Sound crashSound;
+  private Sound laserSound;
+  private Sound crashSound;
+  private Color color;
 
   // AI stuff
   SteeringBehavior<Vector2> behavior;
@@ -56,14 +58,15 @@ public class Person extends Actor implements Steerable<Vector2> {
    * @param startY  The starting y-position.
    * @param world   The Box2D world.
    */
-  public Person(Texture texture, float startX, float startY, World world) {
+  public Person(Texture texture, float startX, float startY, World world, Color color) {
     this.world = world;
+    this.color = color;
     sprite = new Sprite(texture);
     setBounds(startX, startY, PLAYER_SIZE, PLAYER_SIZE);
     body = createPlayerBody(world);
     projectiles = new Array<Projectile>();
-    //laserSound = Gdx.audio.newSound(Gdx.files.internal("Lasersound.ogg"));
-    //crashSound = Gdx.audio.newSound(Gdx.files.internal("Crashsound.wav"));
+    laserSound = Gdx.audio.newSound(Gdx.files.internal("Lasersound.ogg"));
+    crashSound = Gdx.audio.newSound(Gdx.files.internal("Crashsound.wav"));
 
     boundingRadius = PLAYER_SIZE / 2;
     maxLinearSpeed = 50;
@@ -93,6 +96,7 @@ public class Person extends Actor implements Steerable<Vector2> {
   @Override
   public void draw(Batch batch, float parentAlpha) {
     if (!Constants.isDebug()) {
+      batch.setColor(color);
       batch.draw(sprite, getX(), getY(), getWidth(), getHeight());
     }
   }
@@ -104,8 +108,8 @@ public class Person extends Actor implements Steerable<Vector2> {
       world.destroyBody(body);
     }
 
-    //crashSound.dispose();
-    //laserSound.dispose();
+    crashSound.dispose();
+    laserSound.dispose();
 
     return super.remove();
   }
@@ -125,7 +129,7 @@ public class Person extends Actor implements Steerable<Vector2> {
         getY() + getHeight() / 2 + targetY,
         world
     ));
-    //laserSound.play();
+    laserSound.play();
   }
 
   /**
@@ -135,7 +139,7 @@ public class Person extends Actor implements Steerable<Vector2> {
    */
   public void takeDamage(int damage) {
     currentHealth -= damage;
-    //crashSound.play();
+    crashSound.play();
     if (currentHealth <= 0) {
       Gdx.app.log(getClass().getSimpleName(), "Player is dead");
       alive = false;
