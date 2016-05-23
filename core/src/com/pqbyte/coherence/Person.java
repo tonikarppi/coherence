@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
-import com.badlogic.gdx.ai.steer.behaviors.Arrive;
+import com.badlogic.gdx.ai.utils.Location;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -17,7 +17,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.Iterator;
@@ -25,7 +24,7 @@ import java.util.Iterator;
 /**
  * A moving person (player or enemy).
  */
-public abstract class Person extends Actor {
+public class Person extends Actor implements Steerable<Vector2> {
 
   private static final int PLAYER_SIZE = 2;
   private static final int FULL_HEALTH = 100;
@@ -37,7 +36,17 @@ public abstract class Person extends Actor {
   private int currentHealth = FULL_HEALTH;
   private boolean alive = true;
   //private Sound laserSound;
-  private Sound crashSound;
+  //private Sound crashSound;
+
+  // AI stuff
+  SteeringBehavior<Vector2> behavior;
+  SteeringAcceleration<Vector2> steeringOutput;
+  boolean tagged;
+  float boundingRadius;
+  float maxLinearSpeed;
+  float maxLinearAcceleration;
+  float maxAngularSpeed;
+  float maxAngularAcceleration;
 
   /**
    * The player entity that is controlled.
@@ -54,7 +63,15 @@ public abstract class Person extends Actor {
     body = createPlayerBody(world);
     projectiles = new Array<Projectile>();
     //laserSound = Gdx.audio.newSound(Gdx.files.internal("Lasersound.ogg"));
-    crashSound = Gdx.audio.newSound(Gdx.files.internal("Crashsound.wav"));
+    //crashSound = Gdx.audio.newSound(Gdx.files.internal("Crashsound.wav"));
+
+    boundingRadius = PLAYER_SIZE / 2;
+    maxLinearSpeed = 50;
+    maxLinearAcceleration = 100;
+    maxAngularSpeed = 20;
+    maxAngularAcceleration = 100;
+    tagged = false;
+    steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
   }
 
   @Override
@@ -87,7 +104,7 @@ public abstract class Person extends Actor {
       world.destroyBody(body);
     }
 
-    crashSound.dispose();
+    //crashSound.dispose();
     //laserSound.dispose();
 
     return super.remove();
@@ -118,7 +135,7 @@ public abstract class Person extends Actor {
    */
   public void takeDamage(int damage) {
     currentHealth -= damage;
-    crashSound.play();
+    //crashSound.play();
     if (currentHealth <= 0) {
       Gdx.app.log(getClass().getSimpleName(), "Player is dead");
       alive = false;
@@ -161,5 +178,186 @@ public abstract class Person extends Actor {
     shape.dispose();
 
     return body;
+  }
+
+  @Override
+  public Vector2 getLinearVelocity() {
+    return body.getLinearVelocity();
+  }
+
+  @Override
+  public float getAngularVelocity() {
+    return body.getAngularVelocity();
+  }
+
+  @Override
+  public float getBoundingRadius() {
+    return boundingRadius;
+  }
+
+  @Override
+  public boolean isTagged() {
+    return tagged;
+  }
+
+  @Override
+  public void setTagged(boolean tagged) {
+    this.tagged = tagged;
+  }
+
+  @Override
+  public float getZeroLinearSpeedThreshold() {
+    return 0.001f;
+  }
+
+  @Override
+  public void setZeroLinearSpeedThreshold(float value) {
+
+  }
+
+  @Override
+  public float getMaxLinearSpeed() {
+    return maxLinearSpeed;
+  }
+
+  @Override
+  public void setMaxLinearSpeed(float maxLinearSpeed) {
+    this.maxLinearSpeed = maxLinearSpeed;
+  }
+
+  @Override
+  public float getMaxLinearAcceleration() {
+    return maxLinearSpeed;
+  }
+
+  @Override
+  public void setMaxLinearAcceleration(float maxLinearAcceleration) {
+    this.maxLinearAcceleration = maxLinearAcceleration;
+  }
+
+  @Override
+  public float getMaxAngularSpeed() {
+    return maxAngularSpeed;
+  }
+
+  @Override
+  public void setMaxAngularSpeed(float maxAngularSpeed) {
+    this.maxAngularSpeed = maxAngularSpeed;
+  }
+
+  @Override
+  public float getMaxAngularAcceleration() {
+    return maxAngularAcceleration;
+  }
+
+  @Override
+  public void setMaxAngularAcceleration(float maxAngularAcceleration) {
+    this.maxAngularAcceleration = maxAngularAcceleration;
+  }
+
+  @Override
+  public Vector2 getPosition() {
+    return body.getPosition();
+  }
+
+  @Override
+  public float getOrientation() {
+    return body.getAngle();
+  }
+
+  @Override
+  public void setOrientation(float orientation) {
+    body.setTransform(getPosition(), orientation);
+  }
+
+  @Override
+  public float vectorToAngle(Vector2 vector) {
+    //noinspection SuspiciousNameCombination
+    return (float) Math.atan2(-vector.x, vector.y);
+  }
+
+  @Override
+  public Vector2 angleToVector(Vector2 outVector, float angle) {
+    outVector.x = -(float) Math.sin(angle);
+    outVector.y = (float) Math.cos(angle);
+
+    return outVector;
+  }
+
+  @Override
+  public Location<Vector2> newLocation() {
+    return null;
+  }
+
+  public boolean isIndependentFacing() {
+    return true;
+  }
+
+  public Body getBody() {
+    return body;
+  }
+
+  public void setBehavior(SteeringBehavior<Vector2> behavior) {
+    this.behavior = behavior;
+  }
+
+  public SteeringBehavior<Vector2> getBehavior() {
+    return behavior;
+  }
+
+  /**
+   * Update AI steering.
+   *
+   * @param delta Time since last update.
+   */
+  public void update(float delta) {
+    if (behavior != null) {
+      behavior.calculateSteering(steeringOutput);
+      applySteering(delta);
+    }
+  }
+
+  protected void applySteering(float deltaTime) {
+    boolean anyAccelerations = false;
+
+    // Update position and linear velocity.
+    if (!steeringOutput.linear.isZero()) {
+      // this method internally scales the force by deltaTime
+      body.applyForceToCenter(steeringOutput.linear.scl(100), true);
+      anyAccelerations = true;
+    }
+
+    // Update orientation and angular velocity
+    if (isIndependentFacing()) {
+      if (steeringOutput.angular != 0) {
+        // this method internally scales the torque by deltaTime
+        body.applyTorque(steeringOutput.angular, true);
+        anyAccelerations = true;
+      }
+    } else {
+      // If we haven't got any velocity, then we can do nothing.
+      Vector2 linVel = getLinearVelocity();
+      if (!linVel.isZero(getZeroLinearSpeedThreshold())) {
+        float newOrientation = vectorToAngle(linVel);
+        body.setAngularVelocity((newOrientation - getAngularVelocity()) * deltaTime); // this is superfluous if independentFacing is always true
+        body.setTransform(body.getPosition(), newOrientation);
+      }
+    }
+
+    if (anyAccelerations) {
+      // Cap the linear speed
+      Vector2 velocity = body.getLinearVelocity();
+      float currentSpeedSquare = velocity.len2();
+      float maxLinearSpeed = getMaxLinearSpeed();
+      if (currentSpeedSquare > maxLinearSpeed * maxLinearSpeed) {
+        body.setLinearVelocity(velocity.scl(maxLinearSpeed / (float) Math.sqrt(currentSpeedSquare)));
+      }
+
+      // Cap the angular speed
+      float maxAngVelocity = getMaxAngularSpeed();
+      if (body.getAngularVelocity() > maxAngVelocity) {
+        body.setAngularVelocity(maxAngVelocity);
+      }
+    }
   }
 }
