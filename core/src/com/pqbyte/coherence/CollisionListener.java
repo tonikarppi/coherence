@@ -31,8 +31,8 @@ public class CollisionListener implements ContactListener {
         && filterA.categoryBits == Constants.WORLD_ENTITY) {
       bulletsToBeRemoved.add((Projectile) actorB);
     } else if (actorB instanceof Projectile
-        && actorA instanceof Player) {
-      Player target = (Player) actorA;
+        && actorA instanceof Person) {
+      Person target = (Person) actorA;
       Projectile bullet = (Projectile) actorB;
       if (!bullet.getShooter().equals(actorA)) {
         // The player isn't shooting themselves, take damage.
