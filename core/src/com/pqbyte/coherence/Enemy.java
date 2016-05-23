@@ -5,6 +5,11 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Enemy extends Person {
 
+  private static final int NANOSECONDS_IN_SECOND = 1000000000;
+
+  private double lastShotTime = 0;
+  private Player target;
+
   /**
    * The evil enemy that must be destroyed.
    *
@@ -13,7 +18,21 @@ public class Enemy extends Person {
    * @param startY  The starting y-position.
    * @param world   The Box2D world.
    */
-  public Enemy(Texture texture, float startX, float startY, World world) {
+  public Enemy(Texture texture, float startX, float startY, World world, Player target) {
     super(texture, startX, startY, world);
+    this.target = target;
+  }
+
+  @Override
+  public void act(float delta) {
+    update(delta);
+
+    double currentTime = System.nanoTime();
+    if (currentTime - lastShotTime > NANOSECONDS_IN_SECOND * 0.2) {
+      shoot(target.getX() - getX(), target.getY() - getY());
+      lastShotTime = currentTime;
+    }
+
+    super.act(delta);
   }
 }
