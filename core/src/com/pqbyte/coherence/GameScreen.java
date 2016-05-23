@@ -2,6 +2,7 @@ package com.pqbyte.coherence;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.ai.steer.behaviors.Arrive;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -24,6 +25,7 @@ public class GameScreen extends ScreenAdapter {
   private Array<Projectile> bulletToBeRemoved;
   private Array<Person> alivePeople;
   private Player player;
+  private Enemy enemy;
   private Hud hud;
   //private Music gameMusic;
 
@@ -50,13 +52,6 @@ public class GameScreen extends ScreenAdapter {
             VIEWPORT_WIDTH * (screenHeight / screenWidth))
     );
     hud = new Hud(gameStage.getBatch());
-    player = new Player(
-        new Texture(Gdx.files.internal("cube128.png")),
-        20,
-        20,
-        world,
-        hud
-    );
 
     Map map = new Map(
         new Texture(Gdx.files.internal("wallpaper.jpg")),
@@ -67,14 +62,24 @@ public class GameScreen extends ScreenAdapter {
 
     gameStage.addActor(map);
     addObstacles();
+
+    player = new Player(
+        new Texture(Gdx.files.internal("cube128.png")),
+        10,
+        map.getHeight() / 2,
+        world,
+        hud
+    );
+
     gameStage.addActor(player);
     gameStage.setKeyboardFocus(player);
 
-    Enemy enemy = new Enemy(
+    enemy = new Enemy(
         new Texture(Gdx.files.internal("cube128.png")),
-        10,
-        10,
-        world
+        map.getWidth() - 10,
+        map.getHeight() / 2,
+        world,
+        player
     );
     gameStage.addActor(enemy);
 
@@ -88,6 +93,13 @@ public class GameScreen extends ScreenAdapter {
     }
 
     Gdx.input.setInputProcessor(hud.getStage());
+
+    // Follow player behavior
+    Arrive<Vector2> arriveSB = new Arrive<Vector2>(enemy, player)
+        .setTimeToTarget(0.01f)
+        .setArrivalTolerance(0.01f)
+        .setDecelerationRadius(10);
+    enemy.setBehavior(arriveSB);
   }
 
   @Override
@@ -114,6 +126,7 @@ public class GameScreen extends ScreenAdapter {
     removeUsedBullets();
     removeDeadPlayers();
     world.step(1f / 60f, 6, 2);
+
     gameStage.act(delta);
     gameStage.getCamera().position.set(
         player.getX() + player.getWidth() / 2f,
