@@ -173,8 +173,11 @@ public class GameScreen extends ScreenAdapter {
       if (!player.isAlive()) {
         player.remove();
         iterator.remove();
-        game.setScreen(new WinnerScreen(game));
       }
+    }
+
+    if (alivePeople.size == 1) {
+      game.setScreen(new WinnerScreen(game, alivePeople.first()));
     }
   }
 
