@@ -1,5 +1,6 @@
 package com.pqbyte.coherence;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -18,8 +19,8 @@ public class Enemy extends Person {
    * @param startY  The starting y-position.
    * @param world   The Box2D world.
    */
-  public Enemy(Texture texture, float startX, float startY, World world, Player target) {
-    super(texture, startX, startY, world);
+  public Enemy(Texture texture, float startX, float startY, World world, Player target, Color color) {
+    super(texture, startX, startY, world, color);
     this.target = target;
   }
 
