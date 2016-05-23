@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.ai.steer.behaviors.Arrive;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Matrix4;
@@ -25,9 +26,8 @@ public class GameScreen extends ScreenAdapter {
   private Array<Projectile> bulletToBeRemoved;
   private Array<Person> alivePeople;
   private Player player;
-  private Enemy enemy;
   private Hud hud;
-  //private Music gameMusic;
+  private Music gameMusic;
 
   /**
    * The screen where the game is played.
@@ -38,8 +38,8 @@ public class GameScreen extends ScreenAdapter {
     bulletToBeRemoved = new Array<Projectile>();
     alivePeople = new Array<Person>();
 
-    //gameMusic = Gdx.audio.newMusic(Gdx.files.internal("Gamemusic.ogg"));
-    //gameMusic.setLooping(true);
+    gameMusic = Gdx.audio.newMusic(Gdx.files.internal("Gamemusic.ogg"));
+    gameMusic.setLooping(true);
 
     world.setContactListener(new CollisionListener(bulletToBeRemoved));
 
@@ -54,7 +54,7 @@ public class GameScreen extends ScreenAdapter {
     hud = new Hud(gameStage.getBatch());
 
     Map map = new Map(
-        new Texture(Gdx.files.internal("wallpaper.jpg")),
+        new Texture(Gdx.files.internal("Gamemap.png")),
         Constants.WORLD_WIDTH,
         Constants.WORLD_HEIGHT,
         world
@@ -68,19 +68,20 @@ public class GameScreen extends ScreenAdapter {
         10,
         map.getHeight() / 2,
         world,
-        hud
+        hud,
+        Color.BLUE
     );
 
     gameStage.addActor(player);
     gameStage.setKeyboardFocus(player);
 
-    enemy = new Enemy(
+    Enemy enemy = new Enemy(
         new Texture(Gdx.files.internal("cube128.png")),
         map.getWidth() - 10,
         map.getHeight() / 2,
         world,
-        player
-    );
+        player,
+        Color.RED);
     gameStage.addActor(enemy);
 
     alivePeople.add(player);
@@ -109,13 +110,13 @@ public class GameScreen extends ScreenAdapter {
     if (Constants.isDebug()) {
       debugRenderer.dispose();
     }
-    //gameMusic.dispose();
+    gameMusic.dispose();
   }
 
   @Override
   public void show() {
     // Start playing when screen is shown
-    //gameMusic.play();
+    gameMusic.play();
   }
 
   @Override
