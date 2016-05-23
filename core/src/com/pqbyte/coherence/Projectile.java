@@ -9,11 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Projectile extends Actor {
 
-  private Player shooter;
+  private Person shooter;
   private Body body;
   private World world;
-  private float toX;
-  private float toY;
 
   private float dx;
   private float dy;
@@ -22,12 +20,14 @@ public class Projectile extends Actor {
 
   /**
    * Represents a projectile being shot.
-   *
-   * @param shooter The player who fired the projectile.
-   *                @param fromX The origin
-   * @param world   The Box2D world.
+   * @param shooter The person who shot the projectile.
+   * @param fromX Originating x-position.
+   * @param fromY Originating y-position.
+   * @param toX Target x-position.
+   * @param toY Target y-position.
+   * @param world The Box2D world.
    */
-  public Projectile(Player shooter, float fromX, float fromY, float toX, float toY, World world) {
+  public Projectile(Person shooter, float fromX, float fromY, float toX, float toY, World world) {
     this.shooter = shooter;
     this.world = world;
     dx = toX - fromX;
@@ -86,7 +86,7 @@ public class Projectile extends Actor {
     return body;
   }
 
-  public Player getShooter() {
+  public Person getShooter() {
     return shooter;
   }
 }

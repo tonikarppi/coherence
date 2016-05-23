@@ -2,8 +2,8 @@ package com.pqbyte.coherence;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.ai.steer.behaviors.Arrive;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -24,11 +24,10 @@ public class GameScreen extends ScreenAdapter {
   private World world;
   private Box2DDebugRenderer debugRenderer;
   private Array<Projectile> bulletToBeRemoved;
-  private Array<Player> alivePlayers;
+  private Array<Person> alivePeople;
   private Player player;
   private Hud hud;
-  Music gameMusic;
-
+  private Music gameMusic;
 
   /**
    * The screen where the game is played.
@@ -37,26 +36,22 @@ public class GameScreen extends ScreenAdapter {
     this.game = game;
     world = new World(new Vector2(0, 0), true);
     bulletToBeRemoved = new Array<Projectile>();
-    alivePlayers = new Array<Player>();
+    alivePeople = new Array<Person>();
 
     gameMusic = Gdx.audio.newMusic(Gdx.files.internal("Gamemusic.ogg"));
     gameMusic.setLooping(true);
 
     world.setContactListener(new CollisionListener(bulletToBeRemoved));
 
-    player = new Player(
-        new Texture(Gdx.files.internal("cube128.png")),
-        20,
-        20,
-        world,
-        0,
-        0,
-        1,
-        0
-    );
-
     float screenWidth = Gdx.graphics.getWidth();
     float screenHeight = Gdx.graphics.getHeight();
+
+    gameStage = new Stage(
+        new ExtendViewport(
+            VIEWPORT_WIDTH,
+            VIEWPORT_WIDTH * (screenHeight / screenWidth))
+    );
+    hud = new Hud(gameStage.getBatch());
 
     Map map = new Map(
         new Texture(Gdx.files.internal("Gamemap.png")),
@@ -64,31 +59,33 @@ public class GameScreen extends ScreenAdapter {
         Constants.WORLD_HEIGHT,
         world
     );
-//wallpaper.jpg
-    gameStage = new Stage(
-        new ExtendViewport(
-            VIEWPORT_WIDTH,
-            VIEWPORT_WIDTH * (screenHeight / screenWidth))
-    );
+
     gameStage.addActor(map);
     addObstacles();
+
+    player = new Player(
+        new Texture(Gdx.files.internal("cube128.png")),
+        10,
+        map.getHeight() / 2,
+        world,
+        hud,
+        Color.BLUE
+    );
+
     gameStage.addActor(player);
     gameStage.setKeyboardFocus(player);
 
-    Player enemy = new Player(
+    Enemy enemy = new Enemy(
         new Texture(Gdx.files.internal("cube128.png")),
-        10,
-        10,
+        map.getWidth() - 10,
+        map.getHeight() / 2,
         world,
-        1,
-        0,
-        0,
-        0
-    );
+        player,
+        Color.RED);
     gameStage.addActor(enemy);
 
-    alivePlayers.add(player);
-    alivePlayers.add(enemy);
+    alivePeople.add(player);
+    alivePeople.add(enemy);
 
     Gdx.input.setInputProcessor(gameStage);
 
@@ -96,9 +93,14 @@ public class GameScreen extends ScreenAdapter {
       debugRenderer = new Box2DDebugRenderer();
     }
 
-    hud = new Hud(gameStage.getBatch());
-    player.setHud(hud);
     Gdx.input.setInputProcessor(hud.getStage());
+
+    // Follow player behavior
+    Arrive<Vector2> arriveSB = new Arrive<Vector2>(enemy, player)
+        .setTimeToTarget(0.01f)
+        .setArrivalTolerance(0.01f)
+        .setDecelerationRadius(10);
+    enemy.setBehavior(arriveSB);
   }
 
   @Override
@@ -125,6 +127,7 @@ public class GameScreen extends ScreenAdapter {
     removeUsedBullets();
     removeDeadPlayers();
     world.step(1f / 60f, 6, 2);
+
     gameStage.act(delta);
     gameStage.getCamera().position.set(
         player.getX() + player.getWidth() / 2f,
@@ -164,9 +167,9 @@ public class GameScreen extends ScreenAdapter {
    * Removes dead players from scene.
    */
   private void removeDeadPlayers() {
-    Iterator<Player> iterator = alivePlayers.iterator();
+    Iterator<Person> iterator = alivePeople.iterator();
     while (iterator.hasNext()) {
-      Player player = iterator.next();
+      Person player = iterator.next();
       if (!player.isAlive()) {
         player.remove();
         iterator.remove();
