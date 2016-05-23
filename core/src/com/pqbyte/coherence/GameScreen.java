@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -131,6 +132,12 @@ public class GameScreen extends ScreenAdapter {
         player.getY() + player.getHeight() / 2f,
         0
     );
+
+
+    //shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+   // player.setColor(Color.BLUE);
+
+    //shapeRenderer.end();
     gameStage.draw();
 
     if (Constants.isDebug()) {
