@@ -1,5 +1,6 @@
 package com.pqbyte.coherence;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
@@ -19,8 +20,9 @@ public class Player extends Person {
    * @param world The Box2D world.
    * @param hud Overlay showing buttons.
    */
-  public Player(Texture texture, float startX, float startY, World world, Hud hud) {
-    super(texture, startX, startY, world);
+
+  public Player(Texture texture, float startX, float startY, World world, Hud hud, Color color) {
+    super(texture, startX, startY, world, color);
     movementController = hud.getMovementController();
     shooterController = hud.getShooterController();
   }
