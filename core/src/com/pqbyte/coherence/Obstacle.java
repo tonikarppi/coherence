@@ -43,6 +43,9 @@ public class Obstacle extends Actor {
 
   @Override
   public void draw(Batch batch, float parentAlpha) {
+    if (Constants.isDebug()) {
+      return;
+    }
     renderer.begin(ShapeRenderer.ShapeType.Filled);
     renderer.setColor(79 / 255f, 79 / 255f, 79 / 255f, 1);
     renderer.setProjectionMatrix(batch.getProjectionMatrix());
