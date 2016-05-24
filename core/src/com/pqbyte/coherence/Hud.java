@@ -45,7 +45,7 @@ public class Hud {
     bottomTable.add(movementController);
     bottomTable.add().expandX();
     bottomTable.add(shooterController);
-    bottomTable.setDebug(true);
+    bottomTable.setDebug(Constants.isDebug());
     stage.addActor(bottomTable);
   }
 
