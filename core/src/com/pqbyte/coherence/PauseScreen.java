@@ -31,12 +31,13 @@ public class PauseScreen extends ScreenAdapter {
    */
   public PauseScreen(Coherence game) {
     this.game = game;
-    Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+
     stage = new Stage();
     Table table = new Table();
     table.setFillParent(true);
     stage.addActor(table);
 
+    Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
     Label titleLabel = createTitleLabel(skin);
     table.add(titleLabel).spaceBottom(160);
     table.row();
@@ -89,7 +90,7 @@ public class PauseScreen extends ScreenAdapter {
 
     button.addListener(new ClickListener() {
       @Override
-      public void clicked(InputEvent event, float xPos, float yPos) {
+      public void clicked(InputEvent event, float xpos, float ypos) {
         game.setScreen(game.getPreviousScreen());
         Gdx.input.setInputProcessor(game.getPreviousInputProcessor());
         dispose();
@@ -104,7 +105,7 @@ public class PauseScreen extends ScreenAdapter {
 
     button.addListener(new ClickListener() {
       @Override
-      public void clicked(InputEvent event, float xPos, float yPos) {
+      public void clicked(InputEvent event, float xpos, float ypos) {
         game.setScreen(new MenuScreen(game));
         //Gdx.input.setInputProcessor(game.getPreviousInputProcessor());
         dispose();
@@ -119,7 +120,7 @@ public class PauseScreen extends ScreenAdapter {
 
     button.addListener(new ClickListener() {
       @Override
-      public void clicked(InputEvent event, float xPos, float yPos) {
+      public void clicked(InputEvent event, float xpos, float ypos) {
         Gdx.app.exit();
         dispose();
       }
