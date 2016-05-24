@@ -23,7 +23,7 @@ public class WinnerScreen extends ScreenAdapter {
   private Stage stage;
   private Coherence game;
 
-  public WinnerScreen(Coherence game) {
+  public WinnerScreen(Coherence game, Person winner) {
     this.game = game;
     Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
     Table table = new Table();
@@ -31,7 +31,7 @@ public class WinnerScreen extends ScreenAdapter {
     stage = new Stage();
     stage.addActor(table);
 
-    Label titleLabel = createTitleLabel(skin);
+    Label titleLabel = createTitleLabel(skin, winner);
     table.add(titleLabel).spaceBottom(20);
     table.row();
 
@@ -76,8 +76,16 @@ public class WinnerScreen extends ScreenAdapter {
     stage.dispose();
   }
 
-  private Label createTitleLabel(Skin skin) {
-    Label label = new Label("GAME IS OVER", skin);
+  private Label createTitleLabel(Skin skin, Person winner) {
+    String title;
+    if (winner instanceof Player) {
+      title = "You are the winner! :)";
+    } else if (winner instanceof Enemy) {
+      title = "You lost :(";
+    } else {
+      throw new IllegalArgumentException("Unknown winner type");
+    }
+    Label label = new Label(title, skin);
 
     // Double font size
     label.setSize(label.getWidth() * 2, label.getHeight());
