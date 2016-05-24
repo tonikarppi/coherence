@@ -29,6 +29,7 @@ public class GameScreen extends ScreenAdapter {
   private Player player;
   private Hud hud;
   private Music gameMusic;
+  Texture wallTexture;
 
   /**
    * The screen where the game is played.
@@ -38,6 +39,7 @@ public class GameScreen extends ScreenAdapter {
     world = new World(new Vector2(0, 0), true);
     bulletToBeRemoved = new Array<Projectile>();
     alivePeople = new Array<Person>();
+    wallTexture = new Texture(Gdx.files.internal("cube128.png"));
 
     gameMusic = Gdx.audio.newMusic(Gdx.files.internal("Gamemusic.ogg"));
     gameMusic.setLooping(true);
@@ -203,16 +205,15 @@ public class GameScreen extends ScreenAdapter {
     Gdx.app.log(getClass().getSimpleName(), bottomLeftCorner.x + ", " + bottomLeftCorner.y);
 
     Obstacle obstacleLeftHorizontal = new Obstacle(
-        null,
+        wallTexture,
         bottomLeftCorner.x + sideOffset,
         bottomLeftCorner.y + (shortLength - breath) / 2f + sideOffset,
         shortLength,
         breath,
         0,
         world);
-
     Obstacle obstacleLeftVertical = new Obstacle(
-        null,
+        wallTexture,
         bottomLeftCorner.x + (shortLength - breath) / 2f + sideOffset,
         bottomLeftCorner.y + sideOffset,
         shortLength,
@@ -222,7 +223,7 @@ public class GameScreen extends ScreenAdapter {
     );
 
     Obstacle obstacleRightHorizontal = new Obstacle(
-        null,
+        wallTexture,
         topRightCorner.x - sideOffset,
         topRightCorner.y - (shortLength - breath) / 2f - sideOffset,
         shortLength,
@@ -231,7 +232,7 @@ public class GameScreen extends ScreenAdapter {
         world);
 
     Obstacle obstacleRightVertical = new Obstacle(
-        null,
+        wallTexture,
         topRightCorner.x - (shortLength - breath) / 2f - sideOffset,
         topRightCorner.y - sideOffset,
         shortLength,
@@ -241,7 +242,7 @@ public class GameScreen extends ScreenAdapter {
     );
 
     Obstacle obstacleCenterVertical = new Obstacle(
-        null,
+        wallTexture,
         center.x,
         center.y,
         longLength,
@@ -251,7 +252,7 @@ public class GameScreen extends ScreenAdapter {
     );
 
     Obstacle obstacleBottomRight = new Obstacle(
-        null,
+        wallTexture,
         bottomRightCorner.x - sideOffset,
         bottomRightCorner.y + sideOffset,
         longLength,
