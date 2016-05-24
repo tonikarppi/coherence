@@ -141,7 +141,6 @@ public class Person extends Actor implements Steerable<Vector2> {
     currentHealth -= damage;
     crashSound.play();
     if (currentHealth <= 0) {
-      Gdx.app.log(getClass().getSimpleName(), "Player is dead");
       alive = false;
     }
   }
