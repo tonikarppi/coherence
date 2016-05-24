@@ -4,7 +4,9 @@ Coherence is a space shooter for Android. Show your laser rifle skills in this t
 ![](screenshots/coherence1.png)
 
 ## Install
-TODO: Put download link
+<a href="https://play.google.com/store/apps/details?id=com.pqbyte.coherence">
+<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" width="256">
+</a>
 
 ## Creators
 [Toni Karppi](https://github.com/pqbyte)
