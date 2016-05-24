@@ -192,7 +192,6 @@ public class GameScreen extends ScreenAdapter {
     Gdx.app.log(getClass().getSimpleName(), bottomLeftCorner.x + ", " + bottomLeftCorner.y);
 
     Obstacle obstacleLeftHorizontal = new Obstacle(
-        null,
         bottomLeftCorner.x + sideOffset,
         bottomLeftCorner.y + (shortLength - breath) / 2f + sideOffset,
         shortLength,
@@ -201,7 +200,6 @@ public class GameScreen extends ScreenAdapter {
         world);
 
     Obstacle obstacleLeftVertical = new Obstacle(
-        null,
         bottomLeftCorner.x + (shortLength - breath) / 2f + sideOffset,
         bottomLeftCorner.y + sideOffset,
         shortLength,
@@ -211,7 +209,6 @@ public class GameScreen extends ScreenAdapter {
     );
 
     Obstacle obstacleRightHorizontal = new Obstacle(
-        null,
         topRightCorner.x - sideOffset,
         topRightCorner.y - (shortLength - breath) / 2f - sideOffset,
         shortLength,
@@ -220,7 +217,6 @@ public class GameScreen extends ScreenAdapter {
         world);
 
     Obstacle obstacleRightVertical = new Obstacle(
-        null,
         topRightCorner.x - (shortLength - breath) / 2f - sideOffset,
         topRightCorner.y - sideOffset,
         shortLength,
@@ -230,7 +226,6 @@ public class GameScreen extends ScreenAdapter {
     );
 
     Obstacle obstacleCenterVertical = new Obstacle(
-        null,
         center.x,
         center.y,
         longLength,
@@ -240,7 +235,6 @@ public class GameScreen extends ScreenAdapter {
     );
 
     Obstacle obstacleBottomRight = new Obstacle(
-        null,
         bottomRightCorner.x - sideOffset,
         bottomRightCorner.y + sideOffset,
         longLength,
@@ -250,7 +244,6 @@ public class GameScreen extends ScreenAdapter {
     );
 
     Obstacle obstacleTopLeft = new Obstacle(
-        null,
         topLeftCorner.x + sideOffset,
         topLeftCorner.y - sideOffset,
         longLength,
