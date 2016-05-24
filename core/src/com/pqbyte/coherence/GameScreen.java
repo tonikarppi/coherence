@@ -178,6 +178,7 @@ public class GameScreen extends ScreenAdapter {
 
     if (alivePeople.size == 1) {
       game.setScreen(new WinnerScreen(game, alivePeople.first()));
+      dispose();
     }
   }
 
