@@ -18,8 +18,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class PauseScreen extends ScreenAdapter {
+
+  private static final float VIEWPORT_WIDTH = 1100;
 
   private Stage stage;
   private Coherence game;
@@ -32,7 +35,12 @@ public class PauseScreen extends ScreenAdapter {
   public PauseScreen(Coherence game) {
     this.game = game;
 
-    stage = new Stage();
+    float screenWidth = Gdx.graphics.getWidth();
+    float screenHeight = Gdx.graphics.getHeight();
+
+    stage = new Stage(
+        new FitViewport(VIEWPORT_WIDTH, VIEWPORT_WIDTH * (screenHeight / screenWidth))
+    );
     Table table = new Table();
     table.setFillParent(true);
     stage.addActor(table);
@@ -46,11 +54,11 @@ public class PauseScreen extends ScreenAdapter {
     int buttonHeight = 60;
 
     Button resumeButton = createResumeButton(skin);
-    table.add(resumeButton).width(buttonWidth).height(buttonHeight);
+    table.add(resumeButton).width(buttonWidth).height(buttonHeight).padBottom(20);
     table.row();
 
     Button mainButton = createMainButton(skin);
-    table.add(mainButton).width(buttonWidth).height(buttonHeight);
+    table.add(mainButton).width(buttonWidth).height(buttonHeight).padBottom(20);
     table.row();
 
     Button exitButton = createExitButton(skin);
