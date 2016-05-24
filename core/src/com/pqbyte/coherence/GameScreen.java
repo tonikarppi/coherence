@@ -192,8 +192,6 @@ public class GameScreen extends ScreenAdapter {
     float breath = 5;
     float sideOffset = 20;
 
-    Gdx.app.log(getClass().getSimpleName(), bottomLeftCorner.x + ", " + bottomLeftCorner.y);
-
     Obstacle obstacleLeftHorizontal = new Obstacle(
         bottomLeftCorner.x + sideOffset,
         bottomLeftCorner.y + (shortLength - breath) / 2f + sideOffset,
