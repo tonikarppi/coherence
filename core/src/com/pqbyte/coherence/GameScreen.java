@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -28,6 +29,7 @@ public class GameScreen extends ScreenAdapter {
   private Player player;
   private Hud hud;
   private Music gameMusic;
+  Texture wallTexture;
 
   /**
    * The screen where the game is played.
@@ -37,6 +39,7 @@ public class GameScreen extends ScreenAdapter {
     world = new World(new Vector2(0, 0), true);
     bulletToBeRemoved = new Array<Projectile>();
     alivePeople = new Array<Person>();
+    wallTexture = new Texture(Gdx.files.internal("cube128.png"));
 
     gameMusic = Gdx.audio.newMusic(Gdx.files.internal("Gamemusic.ogg"));
     gameMusic.setLooping(true);
@@ -71,6 +74,7 @@ public class GameScreen extends ScreenAdapter {
         hud,
         Color.BLUE
     );
+
 
     gameStage.addActor(player);
     gameStage.setKeyboardFocus(player);
@@ -140,6 +144,12 @@ public class GameScreen extends ScreenAdapter {
         player.getY() + player.getHeight() / 2f,
         0
     );
+
+
+    //shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+   // player.setColor(Color.BLUE);
+
+    //shapeRenderer.end();
     gameStage.draw();
 
     if (Constants.isDebug() && debugRenderer != null) {
@@ -206,7 +216,6 @@ public class GameScreen extends ScreenAdapter {
         breath,
         0,
         world);
-
     Obstacle obstacleLeftVertical = new Obstacle(
         bottomLeftCorner.x + (shortLength - breath) / 2f + sideOffset,
         bottomLeftCorner.y + sideOffset,
