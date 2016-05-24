@@ -205,10 +205,6 @@ public class GameScreen extends ScreenAdapter {
     Gdx.app.log(getClass().getSimpleName(), bottomLeftCorner.x + ", " + bottomLeftCorner.y);
 
     Obstacle obstacleLeftHorizontal = new Obstacle(
-<<<<<<< HEAD
-        wallTexture,
-=======
->>>>>>> ae1884702127e80b068a3bb116bf72e8fd48c1fe
         bottomLeftCorner.x + sideOffset,
         bottomLeftCorner.y + (shortLength - breath) / 2f + sideOffset,
         shortLength,
@@ -216,10 +212,6 @@ public class GameScreen extends ScreenAdapter {
         0,
         world);
     Obstacle obstacleLeftVertical = new Obstacle(
-<<<<<<< HEAD
-        wallTexture,
-=======
->>>>>>> ae1884702127e80b068a3bb116bf72e8fd48c1fe
         bottomLeftCorner.x + (shortLength - breath) / 2f + sideOffset,
         bottomLeftCorner.y + sideOffset,
         shortLength,
@@ -229,10 +221,6 @@ public class GameScreen extends ScreenAdapter {
     );
 
     Obstacle obstacleRightHorizontal = new Obstacle(
-<<<<<<< HEAD
-        wallTexture,
-=======
->>>>>>> ae1884702127e80b068a3bb116bf72e8fd48c1fe
         topRightCorner.x - sideOffset,
         topRightCorner.y - (shortLength - breath) / 2f - sideOffset,
         shortLength,
@@ -241,10 +229,6 @@ public class GameScreen extends ScreenAdapter {
         world);
 
     Obstacle obstacleRightVertical = new Obstacle(
-<<<<<<< HEAD
-        wallTexture,
-=======
->>>>>>> ae1884702127e80b068a3bb116bf72e8fd48c1fe
         topRightCorner.x - (shortLength - breath) / 2f - sideOffset,
         topRightCorner.y - sideOffset,
         shortLength,
@@ -254,10 +238,6 @@ public class GameScreen extends ScreenAdapter {
     );
 
     Obstacle obstacleCenterVertical = new Obstacle(
-<<<<<<< HEAD
-        wallTexture,
-=======
->>>>>>> ae1884702127e80b068a3bb116bf72e8fd48c1fe
         center.x,
         center.y,
         longLength,
@@ -267,10 +247,6 @@ public class GameScreen extends ScreenAdapter {
     );
 
     Obstacle obstacleBottomRight = new Obstacle(
-<<<<<<< HEAD
-        wallTexture,
-=======
->>>>>>> ae1884702127e80b068a3bb116bf72e8fd48c1fe
         bottomRightCorner.x - sideOffset,
         bottomRightCorner.y + sideOffset,
         longLength,
