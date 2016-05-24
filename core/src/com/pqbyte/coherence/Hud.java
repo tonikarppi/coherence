@@ -9,10 +9,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import javafx.scene.control.Tab;
 
 public class Hud {
+
+  private static final float VIEWPORT_WIDTH = 1100;
 
   private Stage stage;
   private Touchpad movementController;
@@ -27,9 +30,9 @@ public class Hud {
     float screenWidth = Gdx.graphics.getWidth();
     float screenHeight = Gdx.graphics.getHeight();
 
-    Viewport viewport = new FillViewport(
-        screenWidth,
-        screenHeight
+    Viewport viewport = new FitViewport(
+        VIEWPORT_WIDTH,
+        VIEWPORT_WIDTH * (screenHeight / screenWidth)
     );
 
     stage = new Stage(viewport, batch);
