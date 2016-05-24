@@ -84,6 +84,7 @@ public class Person extends Actor implements Steerable<Vector2> {
         bodyPos.x - getWidth() / 2,
         bodyPos.y - getHeight() / 2
     );
+    setRotation(body.getAngle() * 180f / (float) Math.PI );
 
     Stage stage = getStage();
     Iterator<Projectile> iterator = projectiles.iterator();
@@ -97,7 +98,14 @@ public class Person extends Actor implements Steerable<Vector2> {
   public void draw(Batch batch, float parentAlpha) {
     if (!Constants.isDebug()) {
       batch.setColor(color);
-      batch.draw(sprite, getX(), getY(), getWidth(), getHeight());
+      batch.draw(
+          sprite,
+          getX(), getY(),
+          getWidth() / 2, getHeight() / 2,
+          getWidth(), getHeight(),
+          1, 1,
+          getRotation()
+      );
     }
   }
 
