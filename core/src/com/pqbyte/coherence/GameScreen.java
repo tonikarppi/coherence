@@ -63,7 +63,7 @@ public class GameScreen extends ScreenAdapter {
 
     gameStage.addActor(map);
     addObstacles();
-/**
+
     player = new Player(
         new Texture(Gdx.files.internal("cube128.png")),
         10,
@@ -72,7 +72,7 @@ public class GameScreen extends ScreenAdapter {
         hud,
         Color.BLUE
     );
- */
+
 
     gameStage.addActor(player);
     gameStage.setKeyboardFocus(player);

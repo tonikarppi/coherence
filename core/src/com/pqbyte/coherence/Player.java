@@ -1,10 +1,7 @@
 package com.pqbyte.coherence;
 
-<<<<<<< HEAD
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-=======
->>>>>>> 9a7230bca50b3aa2ed40844fcf0e638149826d9d
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.World;
