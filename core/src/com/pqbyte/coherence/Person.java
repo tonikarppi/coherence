@@ -70,7 +70,7 @@ public class Person extends Actor implements Steerable<Vector2> {
 
     boundingRadius = PLAYER_SIZE / 2;
     maxLinearSpeed = 50;
-    maxLinearAcceleration = 100;
+    maxLinearAcceleration = 80;
     maxAngularSpeed = 20;
     maxAngularAcceleration = 100;
     tagged = false;
@@ -230,7 +230,7 @@ public class Person extends Actor implements Steerable<Vector2> {
 
   @Override
   public float getMaxLinearAcceleration() {
-    return maxLinearSpeed;
+    return maxLinearAcceleration;
   }
 
   @Override
