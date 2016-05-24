@@ -1,5 +1,9 @@
 package com.pqbyte.coherence;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -12,6 +16,7 @@ public class Projectile extends Actor {
   private Person shooter;
   private Body body;
   private World world;
+  private ParticleEffect effect;
 
   private float dx;
   private float dy;
@@ -34,6 +39,16 @@ public class Projectile extends Actor {
     dy = toY - fromY;
     length = (float) Math.sqrt(dx * dx + dy * dy);
     speed = 80;
+    effect = new ParticleEffect();
+    if (shooter instanceof Player) {
+      effect.load(Gdx.files.internal("blue-particle"), Gdx.files.internal(""));
+    } else if (shooter instanceof Enemy) {
+      effect.load(Gdx.files.internal("red-particle"), Gdx.files.internal(""));
+    } else {
+      throw new IllegalArgumentException("Unknown shooter type");
+    }
+    effect.scaleEffect(0.05f);
+    effect.start();
 
     int offsetFromPlayer = 3;
     setPosition(
@@ -45,9 +60,21 @@ public class Projectile extends Actor {
 
   @Override
   public void act(float delta) {
+    Vector2 position = body.getPosition();
+    effect.update(delta);
+    effect.setPosition(position.x, position.y);
     body.setLinearVelocity(
         speed * dx / length,
         speed * dy / length);
+  }
+
+  @Override
+  public void draw(Batch batch, float parentAlpha) {
+    effect.draw(batch);
+
+    if (effect.isComplete()) {
+      effect.reset();
+    }
   }
 
   @Override
