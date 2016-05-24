@@ -51,8 +51,8 @@ public class Hud {
 
   private Touchpad makeController() {
     Skin skin = new Skin();
-    skin.add("background", new Texture("touchBackground.png"));
-    skin.add("knob", new Texture("touchKnob.png"));
+    skin.add("background", new Texture("touch-background.png"));
+    skin.add("knob", new Texture("touch-knob.png"));
     Drawable background = skin.getDrawable("background");
     Drawable knob = skin.getDrawable("knob");
     Touchpad.TouchpadStyle style = new Touchpad.TouchpadStyle();
