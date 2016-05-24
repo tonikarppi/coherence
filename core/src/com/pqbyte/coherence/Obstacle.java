@@ -43,6 +43,7 @@ public class Obstacle extends Actor {
 
   @Override
   public void draw(Batch batch, float parentAlpha) {
+    batch.end();
     renderer.begin(ShapeRenderer.ShapeType.Filled);
     renderer.setColor(79 / 255f, 79 / 255f, 79 / 255f, 1);
     renderer.setProjectionMatrix(batch.getProjectionMatrix());
@@ -58,6 +59,7 @@ public class Obstacle extends Actor {
         getRotation()
     );
     renderer.end();
+    batch.begin();
   }
 
   private Body createObstacle() {
