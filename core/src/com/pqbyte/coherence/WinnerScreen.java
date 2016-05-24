@@ -23,14 +23,21 @@ public class WinnerScreen extends ScreenAdapter {
   private Stage stage;
   private Coherence game;
 
+  /**
+   * The screen that is shown when a person wins or looses.
+   *
+   * @param game The game instance.
+   * @param winner The winning person.
+   */
   public WinnerScreen(Coherence game, Person winner) {
     this.game = game;
-    Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+
     Table table = new Table();
     table.setFillParent(true);
     stage = new Stage();
     stage.addActor(table);
 
+    Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
     Label titleLabel = createTitleLabel(skin, winner);
     table.add(titleLabel).spaceBottom(20);
     table.row();
@@ -107,7 +114,7 @@ public class WinnerScreen extends ScreenAdapter {
 
     button.addListener(new ClickListener() {
       @Override
-      public void clicked(InputEvent event, float xPos, float yPos) {
+      public void clicked(InputEvent event, float xpos, float ypos) {
         game.setScreen(new GameScreen(game));
         dispose();
       }
@@ -121,7 +128,7 @@ public class WinnerScreen extends ScreenAdapter {
 
     button.addListener(new ClickListener() {
       @Override
-      public void clicked(InputEvent event, float xPos, float yPos) {
+      public void clicked(InputEvent event, float xpos, float ypos) {
         Gdx.app.exit();
         dispose();
       }
@@ -135,7 +142,7 @@ public class WinnerScreen extends ScreenAdapter {
 
     button.addListener(new ClickListener() {
       @Override
-      public void clicked(InputEvent event, float xPos, float yPos) {
+      public void clicked(InputEvent event, float xpos, float ypos) {
         game.setScreen(new MenuScreen(game));
         dispose();
       }
