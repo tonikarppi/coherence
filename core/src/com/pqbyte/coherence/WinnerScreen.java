@@ -17,8 +17,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class WinnerScreen extends ScreenAdapter {
+
+  private static final float VIEWPORT_WIDTH = 1100;
 
   private Stage stage;
   private Coherence game;
@@ -32,9 +35,14 @@ public class WinnerScreen extends ScreenAdapter {
   public WinnerScreen(Coherence game, Person winner) {
     this.game = game;
 
+    float screenWidth = Gdx.graphics.getWidth();
+    float screenHeight = Gdx.graphics.getHeight();
+
     Table table = new Table();
     table.setFillParent(true);
-    stage = new Stage();
+    stage = new Stage(
+        new FitViewport(VIEWPORT_WIDTH, VIEWPORT_WIDTH * (screenHeight / screenWidth))
+    );
     stage.addActor(table);
 
     Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
