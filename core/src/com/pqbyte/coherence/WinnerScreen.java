@@ -102,8 +102,8 @@ public class WinnerScreen extends ScreenAdapter {
     int height = Gdx.graphics.getHeight();
 
     label.setPosition(
-        (width - label.getWidth()) / 2,
-        (height - label.getHeight()) / 2 + height / 4
+        (width - label.getWidth()) / 2f,
+        (height - label.getHeight()) / 2f + height / 4f
     );
 
     return label;
