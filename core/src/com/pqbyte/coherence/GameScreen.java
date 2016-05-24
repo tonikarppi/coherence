@@ -96,11 +96,11 @@ public class GameScreen extends ScreenAdapter {
     Gdx.input.setInputProcessor(hud.getStage());
 
     // Follow player behavior
-    Arrive<Vector2> arriveSB = new Arrive<Vector2>(enemy, player)
+    Arrive<Vector2> arriveBehavior = new Arrive<Vector2>(enemy, player)
         .setTimeToTarget(0.01f)
         .setArrivalTolerance(0.01f)
         .setDecelerationRadius(10);
-    enemy.setBehavior(arriveSB);
+    enemy.setBehavior(arriveBehavior);
   }
 
   @Override
