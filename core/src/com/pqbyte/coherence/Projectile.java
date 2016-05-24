@@ -1,5 +1,9 @@
 package com.pqbyte.coherence;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -9,11 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Projectile extends Actor {
 
-  private Player shooter;
+  private Person shooter;
   private Body body;
   private World world;
-  private float toX;
-  private float toY;
+  private ParticleEffect effect;
 
   private float dx;
   private float dy;
@@ -22,18 +25,30 @@ public class Projectile extends Actor {
 
   /**
    * Represents a projectile being shot.
-   *
-   * @param shooter The player who fired the projectile.
-   *                @param fromX The origin
-   * @param world   The Box2D world.
+   * @param shooter The person who shot the projectile.
+   * @param fromX Originating x-position.
+   * @param fromY Originating y-position.
+   * @param toX Target x-position.
+   * @param toY Target y-position.
+   * @param world The Box2D world.
    */
-  public Projectile(Player shooter, float fromX, float fromY, float toX, float toY, World world) {
+  public Projectile(Person shooter, float fromX, float fromY, float toX, float toY, World world) {
     this.shooter = shooter;
     this.world = world;
     dx = toX - fromX;
     dy = toY - fromY;
     length = (float) Math.sqrt(dx * dx + dy * dy);
     speed = 80;
+    effect = new ParticleEffect();
+    if (shooter instanceof Player) {
+      effect.load(Gdx.files.internal("blue-particle"), Gdx.files.internal(""));
+    } else if (shooter instanceof Enemy) {
+      effect.load(Gdx.files.internal("red-particle"), Gdx.files.internal(""));
+    } else {
+      throw new IllegalArgumentException("Unknown shooter type");
+    }
+    effect.scaleEffect(0.05f);
+    effect.start();
 
     int offsetFromPlayer = 3;
     setPosition(
@@ -45,9 +60,25 @@ public class Projectile extends Actor {
 
   @Override
   public void act(float delta) {
+    Vector2 position = body.getPosition();
+    effect.update(delta);
+    effect.setPosition(position.x, position.y);
     body.setLinearVelocity(
         speed * dx / length,
         speed * dy / length);
+  }
+
+  @Override
+  public void draw(Batch batch, float parentAlpha) {
+    if (Constants.isDebug()) {
+      return;
+    }
+
+    effect.draw(batch);
+
+    if (effect.isComplete()) {
+      effect.reset();
+    }
   }
 
   @Override
@@ -86,7 +117,7 @@ public class Projectile extends Actor {
     return body;
   }
 
-  public Player getShooter() {
+  public Person getShooter() {
     return shooter;
   }
 }

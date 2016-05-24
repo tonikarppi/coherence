@@ -2,8 +2,12 @@ package com.pqbyte.coherence;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.ai.steer.behaviors.Arrive;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -16,76 +20,113 @@ import java.util.Iterator;
 
 public class GameScreen extends ScreenAdapter {
   private static final float VIEWPORT_WIDTH = 80;
-
-  private Stage stage;
+  final Coherence game;
+  private Stage gameStage;
   private World world;
   private Box2DDebugRenderer debugRenderer;
   private Array<Projectile> bulletToBeRemoved;
-  private Array<Player> alivePlayers;
+  private Array<Person> alivePeople;
   private Player player;
+  private Hud hud;
+  private Music gameMusic;
+  Texture wallTexture;
 
   /**
    * The screen where the game is played.
    */
-  public GameScreen() {
+  public GameScreen(final Coherence game) {
+    this.game = game;
     world = new World(new Vector2(0, 0), true);
     bulletToBeRemoved = new Array<Projectile>();
-    alivePlayers = new Array<Player>();
+    alivePeople = new Array<Person>();
+    wallTexture = new Texture(Gdx.files.internal("cube128.png"));
+
+    gameMusic = Gdx.audio.newMusic(Gdx.files.internal("Gamemusic.ogg"));
+    gameMusic.setLooping(true);
 
     world.setContactListener(new CollisionListener(bulletToBeRemoved));
-
-    player = new Player(
-        new Texture(Gdx.files.internal("cube128.png")),
-        20,
-        20,
-        world
-    );
-
-    player.addListener(new PlayerControlListener(player));
 
     float screenWidth = Gdx.graphics.getWidth();
     float screenHeight = Gdx.graphics.getHeight();
 
+    gameStage = new Stage(
+        new ExtendViewport(
+            VIEWPORT_WIDTH,
+            VIEWPORT_WIDTH * (screenHeight / screenWidth))
+    );
+    hud = new Hud(gameStage.getBatch());
+
     Map map = new Map(
-        new Texture(Gdx.files.internal("wallpaper.jpg")),
+        new Texture(Gdx.files.internal("Gamemap.png")),
         Constants.WORLD_WIDTH,
         Constants.WORLD_HEIGHT,
         world
     );
 
-    stage = new Stage(new ExtendViewport(
-        VIEWPORT_WIDTH, VIEWPORT_WIDTH * (screenHeight / screenWidth)));
-    stage.addListener(new ShootingListener(player));
-    stage.addActor(map);
+    gameStage.addActor(map);
     addObstacles();
-    stage.addActor(player);
-    stage.setKeyboardFocus(player);
 
-    Player enemy = new Player(
+    player = new Player(
         new Texture(Gdx.files.internal("cube128.png")),
         10,
-        10,
-        world
+        map.getHeight() / 2,
+        world,
+        hud,
+        Color.BLUE
     );
-    stage.addActor(enemy);
 
-    alivePlayers.add(player);
-    alivePlayers.add(enemy);
 
-    Gdx.input.setInputProcessor(stage);
+    gameStage.addActor(player);
+    gameStage.setKeyboardFocus(player);
+
+    Enemy enemy = new Enemy(
+        new Texture(Gdx.files.internal("cube128.png")),
+        map.getWidth() - 10,
+        map.getHeight() / 2,
+        world,
+        player,
+        Color.RED);
+    gameStage.addActor(enemy);
+
+    alivePeople.add(player);
+    alivePeople.add(enemy);
+
+    Gdx.input.setInputProcessor(gameStage);
 
     if (Constants.isDebug()) {
       debugRenderer = new Box2DDebugRenderer();
     }
+
+    Gdx.input.setInputProcessor(hud.getStage());
+
+    // Follow player behavior
+    Arrive<Vector2> arriveBehavior = new Arrive<Vector2>(enemy, player)
+        .setTimeToTarget(0.01f)
+        .setArrivalTolerance(0.01f)
+        .setDecelerationRadius(10);
+    enemy.setBehavior(arriveBehavior);
   }
 
   @Override
   public void dispose() {
-    stage.dispose();
-    world.dispose();
     if (Constants.isDebug()) {
       debugRenderer.dispose();
+      debugRenderer = null;
     }
+    world.dispose();
+    gameMusic.dispose();
+    gameStage.dispose();
+  }
+
+  @Override
+  public void show() {
+    // Start playing when screen is shown
+    gameMusic.play();
+  }
+
+  @Override
+  public void hide() {
+    gameMusic.stop();
   }
 
   @Override
@@ -96,22 +137,34 @@ public class GameScreen extends ScreenAdapter {
     removeUsedBullets();
     removeDeadPlayers();
     world.step(1f / 60f, 6, 2);
-    stage.act(delta);
-    stage.getCamera().position.set(
+
+    gameStage.act(delta);
+    gameStage.getCamera().position.set(
         player.getX() + player.getWidth() / 2f,
         player.getY() + player.getHeight() / 2f,
         0
     );
-    stage.draw();
 
-    if (Constants.isDebug()) {
-      Matrix4 debugMatrix = stage
+
+    //shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+   // player.setColor(Color.BLUE);
+
+    //shapeRenderer.end();
+    gameStage.draw();
+
+    if (Constants.isDebug() && debugRenderer != null) {
+      Matrix4 debugMatrix = gameStage
           .getBatch()
           .getProjectionMatrix()
           .cpy();
 
       debugRenderer.render(world, debugMatrix);
     }
+
+    Stage hudStage = hud.getStage();
+    hudStage.getBatch().setProjectionMatrix(hudStage.getCamera().combined);
+    hudStage.act(delta);
+    hudStage.draw();
   }
 
   /**
@@ -130,13 +183,18 @@ public class GameScreen extends ScreenAdapter {
    * Removes dead players from scene.
    */
   private void removeDeadPlayers() {
-    Iterator<Player> iterator = alivePlayers.iterator();
+    Iterator<Person> iterator = alivePeople.iterator();
     while (iterator.hasNext()) {
-      Player player = iterator.next();
+      Person player = iterator.next();
       if (!player.isAlive()) {
         player.remove();
         iterator.remove();
       }
+    }
+
+    if (alivePeople.size == 1) {
+      game.setScreen(new WinnerScreen(game, alivePeople.first()));
+      dispose();
     }
   }
 
@@ -151,19 +209,14 @@ public class GameScreen extends ScreenAdapter {
     float breath = 5;
     float sideOffset = 20;
 
-    Gdx.app.log(getClass().getSimpleName(), bottomLeftCorner.x + ", " + bottomLeftCorner.y);
-
     Obstacle obstacleLeftHorizontal = new Obstacle(
-        null,
         bottomLeftCorner.x + sideOffset,
         bottomLeftCorner.y + (shortLength - breath) / 2f + sideOffset,
         shortLength,
         breath,
         0,
         world);
-
     Obstacle obstacleLeftVertical = new Obstacle(
-        null,
         bottomLeftCorner.x + (shortLength - breath) / 2f + sideOffset,
         bottomLeftCorner.y + sideOffset,
         shortLength,
@@ -173,7 +226,6 @@ public class GameScreen extends ScreenAdapter {
     );
 
     Obstacle obstacleRightHorizontal = new Obstacle(
-        null,
         topRightCorner.x - sideOffset,
         topRightCorner.y - (shortLength - breath) / 2f - sideOffset,
         shortLength,
@@ -182,7 +234,6 @@ public class GameScreen extends ScreenAdapter {
         world);
 
     Obstacle obstacleRightVertical = new Obstacle(
-        null,
         topRightCorner.x - (shortLength - breath) / 2f - sideOffset,
         topRightCorner.y - sideOffset,
         shortLength,
@@ -192,7 +243,6 @@ public class GameScreen extends ScreenAdapter {
     );
 
     Obstacle obstacleCenterVertical = new Obstacle(
-        null,
         center.x,
         center.y,
         longLength,
@@ -202,7 +252,6 @@ public class GameScreen extends ScreenAdapter {
     );
 
     Obstacle obstacleBottomRight = new Obstacle(
-        null,
         bottomRightCorner.x - sideOffset,
         bottomRightCorner.y + sideOffset,
         longLength,
@@ -212,7 +261,6 @@ public class GameScreen extends ScreenAdapter {
     );
 
     Obstacle obstacleTopLeft = new Obstacle(
-        null,
         topLeftCorner.x + sideOffset,
         topLeftCorner.y - sideOffset,
         longLength,
@@ -221,12 +269,12 @@ public class GameScreen extends ScreenAdapter {
         world
     );
 
-    stage.addActor(obstacleLeftHorizontal);
-    stage.addActor(obstacleLeftVertical);
-    stage.addActor(obstacleRightHorizontal);
-    stage.addActor(obstacleRightVertical);
-    stage.addActor(obstacleCenterVertical);
-    stage.addActor(obstacleBottomRight);
-    stage.addActor(obstacleTopLeft);
+    gameStage.addActor(obstacleLeftHorizontal);
+    gameStage.addActor(obstacleLeftVertical);
+    gameStage.addActor(obstacleRightHorizontal);
+    gameStage.addActor(obstacleRightVertical);
+    gameStage.addActor(obstacleCenterVertical);
+    gameStage.addActor(obstacleBottomRight);
+    gameStage.addActor(obstacleTopLeft);
   }
 }
