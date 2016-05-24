@@ -19,7 +19,13 @@ public class Enemy extends Person {
    * @param startY  The starting y-position.
    * @param world   The Box2D world.
    */
-  public Enemy(Texture texture, float startX, float startY, World world, Player target, Color color) {
+  public Enemy(
+      Texture texture,
+      float startX,
+      float startY,
+      World world,
+      Player target,
+      Color color) {
     super(texture, startX, startY, world, color);
     this.target = target;
   }

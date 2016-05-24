@@ -1,7 +1,7 @@
 package com.pqbyte.coherence;
 
 public final class Constants {
-  private static final boolean DEBUG = true;
+  private static final boolean DEBUG = false;
 
   public static boolean isDebug() {
     return DEBUG;
