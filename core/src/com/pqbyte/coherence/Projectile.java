@@ -70,6 +70,10 @@ public class Projectile extends Actor {
 
   @Override
   public void draw(Batch batch, float parentAlpha) {
+    if (Constants.isDebug()) {
+      return;
+    }
+
     effect.draw(batch);
 
     if (effect.isComplete()) {
