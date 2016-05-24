@@ -342,7 +342,7 @@ public class Person extends Actor implements Steerable<Vector2> {
       Vector2 linVel = getLinearVelocity();
       if (!linVel.isZero(getZeroLinearSpeedThreshold())) {
         float newOrientation = vectorToAngle(linVel);
-        body.setAngularVelocity((newOrientation - getAngularVelocity()) * deltaTime); // this is superfluous if independentFacing is always true
+        body.setAngularVelocity((newOrientation - getAngularVelocity()) * deltaTime);
         body.setTransform(body.getPosition(), newOrientation);
       }
     }
@@ -353,7 +353,8 @@ public class Person extends Actor implements Steerable<Vector2> {
       float currentSpeedSquare = velocity.len2();
       float maxLinearSpeed = getMaxLinearSpeed();
       if (currentSpeedSquare > maxLinearSpeed * maxLinearSpeed) {
-        body.setLinearVelocity(velocity.scl(maxLinearSpeed / (float) Math.sqrt(currentSpeedSquare)));
+        body.setLinearVelocity(
+            velocity.scl(maxLinearSpeed / (float) Math.sqrt(currentSpeedSquare)));
       }
 
       // Cap the angular speed
