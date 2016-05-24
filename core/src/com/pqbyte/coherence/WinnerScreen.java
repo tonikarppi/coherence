@@ -17,20 +17,35 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class WinnerScreen extends ScreenAdapter {
+
+  private static final float VIEWPORT_WIDTH = 1100;
 
   private Stage stage;
   private Coherence game;
 
+  /**
+   * The screen that is shown when a person wins or looses.
+   *
+   * @param game The game instance.
+   * @param winner The winning person.
+   */
   public WinnerScreen(Coherence game, Person winner) {
     this.game = game;
-    Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+
+    float screenWidth = Gdx.graphics.getWidth();
+    float screenHeight = Gdx.graphics.getHeight();
+
     Table table = new Table();
     table.setFillParent(true);
-    stage = new Stage();
+    stage = new Stage(
+        new FitViewport(VIEWPORT_WIDTH, VIEWPORT_WIDTH * (screenHeight / screenWidth))
+    );
     stage.addActor(table);
 
+    Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
     Label titleLabel = createTitleLabel(skin, winner);
     table.add(titleLabel).spaceBottom(20);
     table.row();
@@ -95,8 +110,8 @@ public class WinnerScreen extends ScreenAdapter {
     int height = Gdx.graphics.getHeight();
 
     label.setPosition(
-        (width - label.getWidth()) / 2,
-        (height - label.getHeight()) / 2 + height / 4
+        (width - label.getWidth()) / 2f,
+        (height - label.getHeight()) / 2f + height / 4f
     );
 
     return label;
@@ -107,7 +122,7 @@ public class WinnerScreen extends ScreenAdapter {
 
     button.addListener(new ClickListener() {
       @Override
-      public void clicked(InputEvent event, float xPos, float yPos) {
+      public void clicked(InputEvent event, float xpos, float ypos) {
         game.setScreen(new GameScreen(game));
         dispose();
       }
@@ -121,7 +136,7 @@ public class WinnerScreen extends ScreenAdapter {
 
     button.addListener(new ClickListener() {
       @Override
-      public void clicked(InputEvent event, float xPos, float yPos) {
+      public void clicked(InputEvent event, float xpos, float ypos) {
         Gdx.app.exit();
         dispose();
       }
@@ -135,7 +150,7 @@ public class WinnerScreen extends ScreenAdapter {
 
     button.addListener(new ClickListener() {
       @Override
-      public void clicked(InputEvent event, float xPos, float yPos) {
+      public void clicked(InputEvent event, float xpos, float ypos) {
         game.setScreen(new MenuScreen(game));
         dispose();
       }

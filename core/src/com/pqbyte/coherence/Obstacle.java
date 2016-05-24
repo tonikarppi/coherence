@@ -1,6 +1,9 @@
 package com.pqbyte.coherence;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -11,13 +14,12 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Obstacle extends Actor {
 
-  private Texture texture;
   private World world;
+  private ShapeRenderer renderer;
 
   /**
    * Represents a block on the map that blocks players and projectiles.
    *
-   * @param texture The texture for the block.
    * @param xpos    The x-position.
    * @param ypos    The y-position.
    * @param width   The width.
@@ -26,18 +28,42 @@ public class Obstacle extends Actor {
    * @param world   The Box2D world object.
    */
   public Obstacle(
-      Texture texture,
       float xpos,
       float ypos,
       float width,
       float height,
       float angle,
       World world) {
-    this.texture = texture;
     this.world = world;
     setBounds(xpos, ypos, width, height);
     setRotation(angle);
     createObstacle();
+    renderer = new ShapeRenderer();
+  }
+
+  @Override
+  public void draw(Batch batch, float parentAlpha) {
+    if (Constants.isDebug()) {
+      return;
+    }
+
+    batch.end();
+    renderer.begin(ShapeRenderer.ShapeType.Filled);
+    renderer.setColor(79 / 255f, 79 / 255f, 79 / 255f, 1);
+    renderer.setProjectionMatrix(batch.getProjectionMatrix());
+    renderer.rect(
+        Constants.WORLD_WIDTH / 2 + getX() - getWidth() / 2,
+        Constants.WORLD_HEIGHT / 2 + getY() - getHeight() / 2,
+        getWidth() / 2,
+        getHeight() / 2,
+        getWidth(),
+        getHeight(),
+        1,
+        1,
+        getRotation()
+    );
+    renderer.end();
+    batch.begin();
   }
 
   private Body createObstacle() {

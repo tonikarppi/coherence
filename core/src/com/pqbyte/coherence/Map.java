@@ -1,22 +1,14 @@
 package com.pqbyte.coherence;
 
 
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-
 
 /**
  * The map where the game is played.
@@ -25,19 +17,14 @@ public class Map extends Actor {
 
   private Texture texture;
   private World world;
-  //TextButton button;
- // TextButton.TextButtonStyle textButtonStyle;
-  //BitmapFont font;
- // Skin skin;
- // TextureAtlas buttonAtlas;
- // Stage stage;
 
   /**
    * The map where the game is played.
+   *
    * @param texture The map texture.
-   * @param width The width of the map.
-   * @param height The height of the map.
-   * @param world The Box2D world.
+   * @param width   The width of the map.
+   * @param height  The height of the map.
+   * @param world   The Box2D world.
    */
   public Map(Texture texture, float width, float height, World world) {
     this.texture = texture;

@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -14,8 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class MenuScreen extends ScreenAdapter {
+
+  private static final float VIEWPORT_WIDTH = 1100;
 
   private Stage stage;
   private Coherence game;
@@ -27,12 +29,18 @@ public class MenuScreen extends ScreenAdapter {
    */
   public MenuScreen(Coherence game) {
     this.game = game;
-    Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+
+    float screenWidth = Gdx.graphics.getWidth();
+    float screenHeight = Gdx.graphics.getHeight();
+
     Table table = new Table();
     table.setFillParent(true);
-    stage = new Stage();
+    stage = new Stage(
+        new FitViewport(VIEWPORT_WIDTH, VIEWPORT_WIDTH * (screenHeight / screenWidth))
+    );
     stage.addActor(table);
 
+    Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
     Label titleLabel = createTitleLabel(skin);
     table.add(titleLabel).spaceBottom(20);
     table.row();
@@ -81,7 +89,7 @@ public class MenuScreen extends ScreenAdapter {
 
     button.addListener(new ClickListener() {
       @Override
-      public void clicked(InputEvent event, float xPos, float yPos) {
+      public void clicked(InputEvent event, float xpos, float ypos) {
         game.setScreen(new GameScreen(game));
         dispose();
       }
