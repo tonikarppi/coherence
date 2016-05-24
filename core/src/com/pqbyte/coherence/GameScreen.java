@@ -105,18 +105,24 @@ public class GameScreen extends ScreenAdapter {
 
   @Override
   public void dispose() {
-    gameStage.dispose();
-    world.dispose();
     if (Constants.isDebug()) {
       debugRenderer.dispose();
+      debugRenderer = null;
     }
+    world.dispose();
     gameMusic.dispose();
+    gameStage.dispose();
   }
 
   @Override
   public void show() {
     // Start playing when screen is shown
     gameMusic.play();
+  }
+
+  @Override
+  public void hide() {
+    gameMusic.stop();
   }
 
   @Override
@@ -136,7 +142,7 @@ public class GameScreen extends ScreenAdapter {
     );
     gameStage.draw();
 
-    if (Constants.isDebug()) {
+    if (Constants.isDebug() && debugRenderer != null) {
       Matrix4 debugMatrix = gameStage
           .getBatch()
           .getProjectionMatrix()
