@@ -1,7 +1,9 @@
 # Coherence
-This game will consist of a player on a map that will able to shoot lasers at enemies.
-The enemies will at first consist of dumb AI that will run around and shoot lasers at random directions (like stormtroopers). If possible this will be expanded to support 1v1 multiplayer over internet.
-The target platform is Android. For the MVP and other information see the [stack](STACK.md).
+Show your laser rifle skills in this top-view arena style blaster. You have one objective, kill the RED agent. That is all, do not dissapont me.
 
-## Sketch
+## Install
+Download the APK (not yet available).
+You can also build the game from source using the Android SDK.
+
+## Sketch (Will be changed to screenshot)
 ![](https://i.imgsafe.org/cf29183.jpg)
