@@ -1,5 +1,5 @@
 # Coherence
-Coherence is a space shooter for Android. Show your laser rifle skills in this top-view arena style blaster. You have one objective, kill the RED agent. That is all, do not dissapont me.
+Coherence is a space shooter for Android. Show your laser rifle skills in this top-view arena style blaster. You have one objective, kill the RED agent. That is all, do not disapoint me.
 
 ![](screenshots/coherence1.png)
 
